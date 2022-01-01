@@ -40,7 +40,12 @@ dom = Div({
                 bgColor = colors.lime;
                 textColor = colors.white;
             };
-            children = "Hi I am a button";
+            children = "Button 1";
+            onClick = function(self,event)
+                    self.style.display = "none"
+                    self.children = "You clicked at " .. event[3] .. ", " .. event[4]
+                    ElementRenderer.rerender()
+            end;
         })
     };
 })

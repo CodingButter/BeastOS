@@ -5,17 +5,18 @@ Element = Element.Element
 
 local DivElement = class({
     constructor = function(self,data)
+        data.type = "div"
         self.super:constructor(data)
     end;
 },Element)
 
 Div = function(data)
-    data.type = "Div"
-    return Element.new(data)
+    return DivElement.new(data)
 end
 
 local ButtonElement = class({
     constructor = function(self,data)
+        self.type = data.type
         self.super:constructor(data)
     end;
 },Element)
