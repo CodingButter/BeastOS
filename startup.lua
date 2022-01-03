@@ -303,8 +303,8 @@ end)()
         Element.eventLoop(event)
       end
     end
+
 	  react.render = function(component)
-      
       idx = 1
   		local element = component()
   		Elements.render(element)
@@ -313,22 +313,17 @@ end)()
         react.startWorkLoop()
       end
   	end
-  	
-    react.Component = class({
-        setState = function(val)
-            local state = val
-            if hooks[idx] then state = hooks[idx] end
-            local _idx = idx
-            local setState = function(newVal)
-                hooks[_idx] = newVal
-            end
-            idx = idx + 1
-            return state,setState
-        end,
-        constructor = function(tag,props,content)
 
+    React.useState = function(val)
+    local state = val
+    if hooks[idx] then state = hooks[idx] end
+        local _idx = idx
+        local setState = function(newVal)
+            hooks[_idx] = newVal
         end
-    })
+        idx = idx + 1
+        return state,setState
+    end,
   	react.createElement = function(tag,props,children)
   		
   	end
@@ -360,9 +355,8 @@ input = Element.createElement("input",{
   end
 },"Hello there")
 
-
+root:appendChild(input)
 React.startWorkLoop(function()
-  root:appendChild(input)
   root:render()
 end)
 
