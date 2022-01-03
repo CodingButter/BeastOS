@@ -172,17 +172,14 @@ Style = class({
     self.focused = true
   end,
   mouse_click = function(self,event)
+    self.focused = false
     local top,left,right,bottom = self:getBounds()
     local x = event[3]
     local y = event[4]
     if x > left - 1 and x < right + 1 and y > top - 1 and y < bottom + 1 and self.rendered then             
-      for _,v in pairs(Elements) do
-        if self ~= v then
-          v.focused = false
-        end
-      end
-      if self.onClick then
-        self:setFocus(event)
+            self.focused = true
+            if self.onClick then
+                self:setFocus(event)
                 self:onClick(event)
             end
         end
@@ -258,24 +255,16 @@ Style = class({
       self:onChange(value)
     end,
     setFocus = function(self)
-      if self.focused == false then
-        self.style.width = math.max(self.style.width,#self.content)
-        self.content = ""
-        self.focused = true
-      end
+      self.super:setFocus()
+      self.style.width = #self.content
+      self.content = "";
     end,
     onChange = function(self)
 
     end,
     char = function(self,event)
       if self.focused then
-        
         self:change(event[2])
-      end
-    end,
-    key_up = function(self,event)
-      if event[2] == 14 then
-        self.content = self.content:sub(1, #self.content - 1)
       end
     end
   	},Element)
@@ -294,17 +283,14 @@ end)()
     local idx = 1
     local react = {}
 
-    react.startWorkLoop = function(f)
+    react.startWorkLoop = function()
       while true do
-        ccraft.term.setBackgroundColor(ccraft.colors.black)
-        ccraft.term.clear()
-        f()
         event = {os.pullEvent()}
         Element.eventLoop(event)
       end
     end
+
 	  react.render = function(component)
-      
       idx = 1
   		local element = component()
   		Elements.render(element)
@@ -313,22 +299,17 @@ end)()
         react.startWorkLoop()
       end
   	end
-  	
-    react.Component = class({
-        setState = function(val)
-            local state = val
-            if hooks[idx] then state = hooks[idx] end
-            local _idx = idx
-            local setState = function(newVal)
-                hooks[_idx] = newVal
-            end
-            idx = idx + 1
-            return state,setState
-        end,
-        constructor = function(tag,props,content)
 
-        end
-    })
+    react.useState = function(val)
+      local state = val
+      if hooks[idx] then state = hooks[idx] end
+      local _idx = idx
+      local setState = function(newVal)
+          hooks[_idx] = newVal
+      end
+      idx = idx + 1
+      return state,setState
+    end
   	react.createElement = function(tag,props,children)
   		
   	end
@@ -360,11 +341,8 @@ input = Element.createElement("input",{
   end
 },"Hello there")
 
-
-React.startWorkLoop(function()
-  root:appendChild(input)
-  root:render()
-end)
+root:appendChild(input)
+root:render()
 
 
 
