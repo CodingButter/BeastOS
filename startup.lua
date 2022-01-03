@@ -172,14 +172,17 @@ Style = class({
     self.focused = true
   end,
   mouse_click = function(self,event)
-    self.focused = false
     local top,left,right,bottom = self:getBounds()
     local x = event[3]
     local y = event[4]
     if x > left - 1 and x < right + 1 and y > top - 1 and y < bottom + 1 and self.rendered then             
-            self.focused = true
-            if self.onClick then
-                self:setFocus(event)
+      for _,v in pairs(Elements) do
+        if self ~= v then
+          v.focused = false
+        end
+      end
+      if self.onClick then
+        self:setFocus(event)
                 self:onClick(event)
             end
         end
@@ -255,16 +258,24 @@ Style = class({
       self:onChange(value)
     end,
     setFocus = function(self)
-      self.super:setFocus()
-      self.style.width = #self.content
-      self.content = "";
+      if self.focused == false then
+        self.style.width = math.max(self.style.width,#self.content)
+        self.content = ""
+        self.focused = true
+      end
     end,
     onChange = function(self)
 
     end,
     char = function(self,event)
       if self.focused then
+        
         self:change(event[2])
+      end
+    end,
+    key_up = function(self,event)
+      if event[2] == 14 then
+        self.content = self.content:sub(1, #self.content - 1)
       end
     end
   	},Element)
@@ -283,8 +294,11 @@ end)()
     local idx = 1
     local react = {}
 
-    react.startWorkLoop = function()
+    react.startWorkLoop = function(f)
       while true do
+        ccraft.term.setBackgroundColor(ccraft.colors.black)
+        ccraft.term.clear()
+        f()
         event = {os.pullEvent()}
         Element.eventLoop(event)
       end
@@ -346,8 +360,11 @@ input = Element.createElement("input",{
   end
 },"Hello there")
 
-root:appendChild(input)
-root:render()
+
+React.startWorkLoop(function()
+  root:appendChild(input)
+  root:render()
+end)
 
 
 
