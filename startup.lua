@@ -95,6 +95,10 @@ Style = class({
     right = 0,
     width = 0,
     height = 0,
+    minWidth = 0,
+    minHeight = 0,
+    maxWidth = 'auto',
+    maxHeight = 'auto',
     paddingLeft = 1,
     paddingTop = 1,
     paddingRight = 1,
@@ -189,20 +193,39 @@ Style = class({
     local offsetLeft = self.offsetLeft
     local offsetTop = self.offsetTop 
     local style = self.style
+    local width = style.width
+    local height = style.height
+    local minWidth = style.minWidth
+    local minHeight = style.minHeight
+    local maxWidth = style.maxWidth
+    local maxHeight = style.maxHeight
+    if minWidth == 'auto' then minWidth = 0 end
+    if minHeight == 'auto' then minHeight = 0 end
+    if maxWidth == 'auto' then maxWidth = style.width end
+    if maxHeight == 'auto' then maxHeight = style.height end
+    minWidth = minWidth + style.paddingLeft + style.paddingRight + 1
+    maxWidth = maxWidth + style.paddingLeft + style.paddingRight + 1
+    minHeight = minHeight + style.paddingTop + style.paddingBottom
+    maxHeight = maxHeight + style.paddingTop + style.paddingBottom 
+
+ 
     -- update the sides to include position, and margins
     offsetLeft = offsetLeft + style.left + style.marginLeft
     offsetTop = offsetTop + style.top + style.marginTop
-    offsetRight = offsetLeft + style.paddingRight + 1
-    offsetBottom = offsetTop + style.paddingBottom
+    local offsetRight = offsetLeft + style.paddingRight + 1
+    local offsetBottom = offsetTop + style.paddingBottom
+    
     if self.content then
-      offsetRight = math.max(offsetRight + style.width,offsetRight + style.paddingLeft + style.paddingRight + #tostring(self.content) - 2)
-      offsetBottom = math.max(offsetBottom + style.height, offsetBottom + style.paddingTop + style.paddingBottom - 1)
+      offsetRight = math.max(offsetRight + width,offsetRight + style.paddingLeft + style.paddingRight + #tostring(self.content) - 2)
+      offsetBottom = math.max(offsetBottom + height, offsetBottom + style.paddingTop + style.paddingBottom - 1)
     end
     for k,v in pairs(utils.table.filter(self.children,function(t)return t.style.display ~= "none";end)) do
-        pleft,pTop,pRight,pBottom = v:getBounds(offsetLeft + style.paddingLeft,offsetTop + style.paddingTop)
-        offsetRight = math.max(offsetRight, pRight + style.paddingRight)
-        offsetBottom = math.max(offsetBottom, pBottom + style.paddingBottom)
+      pleft,pTop,pRight,pBottom = v:getBounds(offsetLeft + style.paddingLeft,offsetTop + style.paddingTop)
+      offsetRight = math.max(offsetRight, pRight + style.paddingRight)
+      offsetBottom = math.max(offsetBottom, pBottom + style.paddingBottom)
     end 
+    --offsetRight = offsetLeft + math.max(minWidth,math.min(offsetRight- offsetLeft,maxWidth))
+    --offsetBottom = offsetTop + math.max(minHeight,math.min(offsetBottom - offsetTop,maxHeight))
     return offsetLeft ,offsetTop, offsetRight, offsetBottom
   end,
   render = function(self)
@@ -271,55 +294,35 @@ Style = class({
   Element.createElement = function(tag,props,content)
     return Element[tag].new(props,content)
   end
-  Element.eventLoop = EventLoop
+
+  Element.startEventLoop = function()
+    while true do
+      if Elements[1] then
+        ccraft.term.clear()
+        Elements[1]:render()
+        event = {os.pullEvent()}
+        EventLoop(event)
+      end
+    end
+  end
+  Element.attachRoot = function(child,props)
+    local width,height = ccraft.term.getSize()
+    local props = props or {}
+    local rootStyle = props.style or Style.new({
+      width = width,
+      height = height,
+      backgroundColor = ccraft.colors.black
+    })
+    local root = Element.new("div",{
+      style = rootStyle
+    })
+    root:appendChild(child)
+    Element.startEventLoop()
+  end
   return Element
 end)()
 
---[[REACT FACTORY]]
-  
-  React = (function()
-    local root = false
-    local hooks = {}
-    local idx = 1
-    local react = {}
 
-    react.startWorkLoop = function()
-      while true do
-        event = {os.pullEvent()}
-        Element.eventLoop(event)
-      end
-    end
-
-	  react.render = function(component)
-      idx = 1
-  		local element = component()
-  		Elements.render(element)
-  		if root == false then
-        root = component
-        react.startWorkLoop()
-      end
-  	end
-
-    react.useState = function(val)
-      local state = val
-      if hooks[idx] then state = hooks[idx] end
-      local _idx = idx
-      local setState = function(newVal)
-          hooks[_idx] = newVal
-      end
-      idx = idx + 1
-      return state,setState
-    end
-  	react.createElement = function(tag,props,children)
-  		
-  	end
-  	
-  	return react
-end)()
-
-
---[[Create our Application]]
- 
 --[[Create a root element]]
 ccraft.term.clear()
 clicks = 1;
@@ -328,12 +331,13 @@ root = Element.createElement("div",{
         backgroundColor = ccraft.colors.blue,
         color = ccraft.colors.black,
         left = 4,
-        top = 4
+        top = 4,
+        maxWidth = 12
     }),
 },"Something")
 input = Element.createElement("input",{
   style = Style.new({
-    width = 5,
+    minWidth = 5,
     backgroundColor = ccraft.colors.lime,
     color = ccraft.colors.black,
   }),
@@ -342,7 +346,10 @@ input = Element.createElement("input",{
 },"Hello there")
 
 root:appendChild(input)
-root:render()
+
+
+Element.attachRoot(root,{})
+
 
 
 
