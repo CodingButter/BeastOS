@@ -131,12 +131,12 @@ Style = class({
   })
 
 --[[ELEMENT BASE CLASSFACTORY]]
+-- Private Variables
+local Elements = {}
+local focusedElement = false
 
 	Element = (function()
 	
-	-- Private Variables
-	local Elements = {}
-  local focusedElement = false
   local EventLoop = function(event)
     focusedElement = false
     for i=#Elements,1,-1 do
@@ -311,9 +311,53 @@ Style = class({
   return Element
 end)()
 
-
-
-
-
+React = (function()
+  
+  local react = {}
+  local hookStorage = {}
+  local hookIndex = 1
+  local rerender = function()
+  local render = function()
+    hookIndex = 1
+  end
+  react.useState = function(startState)
+      local state = hooksStorage[hookIndex] or startState
+      local frozenIndex = hookIndex
+      local setState = function(newVal)
+          if type(newVal) == "function" then
+          newVal = newVal(hooksStorage[frozenIndex])
+          hookStorage[frozenIndex] = newVal
+          return newVal
+      end
+      hookIndex++
+    end
+    return react
+  end
+  react.render = function(c)
+    hookIndex = 1
+    local el = c
+    if type(c) == "function" then
+      local comp = c()
+      local content = nil
+      if type(comp.children) ~= "table" then
+        content = props.children
+      end
+      local el = Element.createElement(comp.tag,comp.props,content)
+    end
+    if type(props.children) == "table" then
+      for _,v in pairs(props.children) do
+        el:appendChild(v)
+      end
+    do
+    return el
+  end
+  react.renderDom = function(component,rootElement)
+    react.root = el
+    react.render(el)
+    rootElement:appendChild(el)
+    Element.startEventLoop()
+  end
+  return react
+end)
 
 
