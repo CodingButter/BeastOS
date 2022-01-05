@@ -1,0 +1,16 @@
+return {
+-- Table: {1}
+{
+   ["style"]={2},
+   ["id"]="startBtn",
+   ["content"]="value1",
+   ["tag"]="button",
+},
+-- Table: {2}
+{
+   ["height"]=1,
+   ["left"]=1,
+   ["backgroundColor"]=256,
+   ["width"]=7,
+},
+}
