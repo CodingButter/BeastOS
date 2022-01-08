@@ -12,10 +12,11 @@ StartButton = function(props)
             width = 7,
             height = 1,
             left = 1,
-            backgroundColor = cc.colors.lightGray
+            backgroundColor = cc.colors.lightGray,
+            focusedBackgroundColor = cc.colors.lime
         },
         onClick = function(self,event)
-            setUser("james")
+            props.toggleMenu()
         end,
     },name)
 end

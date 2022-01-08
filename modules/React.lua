@@ -106,7 +106,7 @@ React = (function()
   end
 
   local startWorkLoop = function()
-      local speed = .25
+      local speed = .5
     for i=1,0,-speed do
       os.startTimer(1)
       sleep(speed)

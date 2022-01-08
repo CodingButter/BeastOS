@@ -528,7 +528,7 @@ React = (function()
   end
 
   local startWorkLoop = function()
-      local speed = .25
+      local speed = .5
     for i=1,0,-speed do
       os.startTimer(1)
       sleep(speed)
@@ -587,10 +587,11 @@ StartButton = function(props)
             width = 7,
             height = 1,
             left = 1,
-            backgroundColor = cc.colors.lightGray
+            backgroundColor = cc.colors.lightGray,
+            focusedBackgroundColor = cc.colors.lime
         },
         onClick = function(self,event)
-            setUser("james")
+            props.toggleMenu()
         end,
     },name)
 end
@@ -621,15 +622,58 @@ BeastOs = function(props)
     })
 end
 
+    -- [[ ./src/components/TaskBar/StartMenu ]]
+
+    -- require("/disk/modules/CC")
+-- require("/disk/modules/React")
+-- require("/disk/modules/Element")
+-- require("/disk/src/context/UserContext")
+
+StartMenu = function(props)
+
+    local buttons = {
+        Element.button({
+            top = 0,
+            width = 12,
+            height = 1
+        },"Settings")
+    }
+
+    return  Element.div({
+        id = "startmenu",
+        style = {
+            width = 12,
+            height = 5,
+            left = 0,
+            top = -5,
+            backgroundColor = cc.colors.lightGray
+        },
+        onClick = function(self,event)
+        end,
+        children = buttons
+    })
+end
+
+
     -- [[ ./src/components/TaskBar/TaskBar ]]
 
     -- require("/disk/modules/React")
 -- require("/disk/src/components/TaskBar/StartButton")
 -- require("/disk/src/components/TaskBar/BeastOs")
+-- require("/disk/src/components/TaskBar/StartMenu")
+
 e = React.Element.new
 
 TaskBar = function(props)
-    return e("div",{
+    local menu,updateMenu = React.useState(false)
+
+    local function toggleMenu()
+        updateMenu(function(val)
+            return val == false
+        end)
+    end
+
+    local element =  e("div",{
         id = "taskbar",
         style = {
             height = 1,
@@ -638,8 +682,16 @@ TaskBar = function(props)
             backgroundColor = cc.colors.red,
             textColor = cc.colors.black
         },
-        children = {StartButton(),BeastOs()}
+        children = {}
     })
+
+    table.insert(element.props.children,StartButton({
+        toggleMenu = toggleMenu
+    }))
+    if menu then table.insert(element.props.children,StartMenu()) end
+    table.insert(element.props.children,BeastOs())
+
+    return element
 end
 
 
