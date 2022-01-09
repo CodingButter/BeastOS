@@ -9,8 +9,10 @@ React = (function()
   local refStorage = {}
   local hookIndex = 1
   local virtualDom = {}
-  local renderElement = function(c)
+  renderElement = function(c)
+    
     local child = nil
+
     el = Element[c.tag](c.props,"")
     el.children = {}
     if type(c.props.children) ~= "table" then

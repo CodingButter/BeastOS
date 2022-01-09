@@ -431,8 +431,10 @@ React = (function()
   local refStorage = {}
   local hookIndex = 1
   local virtualDom = {}
-  local renderElement = function(c)
+  renderElement = function(c)
+    
     local child = nil
+
     el = Element[c.tag](c.props,"")
     el.children = {}
     if type(c.props.children) ~= "table" then
@@ -628,30 +630,35 @@ end
 -- require("/disk/modules/React")
 -- require("/disk/modules/Element")
 -- require("/disk/src/context/UserContext")
+local e = React.Element
 
 StartMenu = function(props)
 
-    local buttons = {
-        Element.button({
-            top = 0,
-            width = 12,
-            height = 1
-        },"Settings")
-    }
-
-    return  Element.div({
+    
+    local startMenu =Element.div({
         id = "startmenu",
         style = {
             width = 12,
             height = 5,
-            left = 0,
+            left = 3,
             top = -5,
             backgroundColor = cc.colors.lightGray
         },
         onClick = function(self,event)
-        end,
-        children = buttons
+        end
     })
+    local buttons = {
+        Element.button({
+            top = 20,
+            left = 1,
+            width = 12,
+            height = 1
+        },"Settings")
+    }
+    for _,v in pairs(buttons) do
+        startMenu:appendChild(v)
+    end
+    return  startMenu
 end
 
 
