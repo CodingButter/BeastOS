@@ -49,7 +49,7 @@ local Element = class({
     local x = event[3]
     local y = event[4]
     if x > left - 1 and x < right + 1 and y > top - 1 and y < bottom + 1 then  
-      self.content = self:getUID() 
+       
       if self.onClick and focusSet == false then
         self:setFocus(event)
         self:onClick(event)
@@ -108,14 +108,14 @@ local Element = class({
   getUID = function(self)
     cc.term.setBackgroundColor(cc.colors.black)
     cc.term.setTextColor(cc.colors.white)
-    local function recursiveParent(el,prevId)
-      if el.parent then
-        if el.parent.id then
-          local newId = tostring(el.parent.id) .. tostring(prevId)
-          return recursiveParent(el.parent,newId) 
-        end
-      end
-      return prevId
+    -- local function recursiveParent(el,prevId)
+    --   if el.parent then
+    --     if el.parent.id then
+    --       local newId = tostring(el.parent.id) .. tostring(prevId)
+    --       return recursiveParent(el.parent,newId) 
+    --     end
+    --   end
+      return self.id
     end
     local id = recursiveParent(self,self.id)
     return id
