@@ -18,7 +18,9 @@ local BeastOs = function(props)
             color = cc.colors.lightBlue
         }, 
         onClick = function(self,event)
-            setUserName("garry")
+            if setUserName then
+                setUserName("Garry")
+            end
         end,
         content = "beast"
     })

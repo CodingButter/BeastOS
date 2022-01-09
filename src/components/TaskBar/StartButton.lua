@@ -5,8 +5,8 @@ local UserContext = require "src/context/UserContext"
 
 local StartButton = function(props)
     local name = React.useContext(UserContext)
-    local setUser = React.setContext(UserContext)
-    return  Element.createElement("button",{
+    local setUserName = React.setContext(UserContext)
+    return  Element.button({
         id = "startBtn",
         style = {
             width = 7,
@@ -17,7 +17,9 @@ local StartButton = function(props)
         },
         onClick = function(self,event)
             props.toggleMenu()
-            setUser("Not Garry")
+            if setUserName then
+                setUserName("Not Garry")
+            end
         end,
     },name)
 end

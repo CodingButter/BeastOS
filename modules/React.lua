@@ -10,21 +10,25 @@ local hookStorage = {}
 local refStorage = {}
 local hookIndex = 1
 local virtualDom = {}
-local renderElement = function(c)
+local function renderElement(c)
   local child = nil
   local el = Element[c.tag](c.props,"")
   el.children = {}
-  if c.props.children and type(c.props.children) ~= "table" then
+  if type(c.props.children) ~= "table" then
     el.content = c.props.children
   else
-    for _,v in ipairs(c.props.children) do
-      if v.props then
-        child = renderElement(v)
-      else
-        child = v
-      end
-      el:appendChild(child)
-    end      
+    if c.props.children.style then
+      el:appendChild(c.props.children)
+    else
+      for _,v in ipairs(c.props.children) do
+        if v.props then
+          child = renderElement(v)
+        else
+          child = v
+        end
+        el:appendChild(child)
+      end  
+    end    
   end
   return el
 end

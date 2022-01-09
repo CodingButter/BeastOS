@@ -5,22 +5,24 @@ local UserContext = require "src/context/UserContext"
 local e = React.createElement
 
 local StartMenu = function(props)
-    return Element.div({
+    return e("div",{
         id = "startmenu",
         style = {
             width = 12,
             height = 5,
-            left = 3,
+            left = 5,
             top = -5,
             backgroundColor = cc.colors.lightGray
         },
-        children = 
-            Element.button({
+        children = {Element.button({
+            id="settingsBtn",
+            style = {
                 top = 1,
                 left = 1,
                 width = 12,
                 height = 1
-            },"Settings")
+            }
+        },"Settings")}
     })
 end
 
