@@ -1,3 +1,4 @@
--- require("/disk/modules/React")
+local React = require "modules/React"
 
-UserContext = React.createContext(nil)
+local UserContext = React.createContext("")
+return UserContext

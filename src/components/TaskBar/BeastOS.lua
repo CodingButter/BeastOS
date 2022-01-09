@@ -1,9 +1,12 @@
--- require("/disk/modules/CC")
--- require("/disk/modules/Element")
--- require("/disk/src/context/UserContext")
+local cc = require "modules/CC"
+local Element = require "modules/Element"
+local React = require "modules/React"
+local UserContext = require "src/context/UserContext"
 
-BeastOs = function(props)
-    setUserName = React.setContext(UserContext)
+local BeastOs = function(props)
+    local WIDTH = cc.term.getSize()
+    local setUserName = React.setContext(UserContext)
+    
     return Element.button(
     {
         id="beastos",
@@ -20,3 +23,5 @@ BeastOs = function(props)
         content = "beast"
     })
 end
+
+return BeastOs

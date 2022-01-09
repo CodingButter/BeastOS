@@ -1,19 +1,13 @@
 -- require("/disk/modules/CC")
 -- require("/disk/modules/React")
 -- require("/disk/modules/Element")
--- require("/disk/src/context/UserContext")
-local e = React.Element
+local cc = require "modules/CC"
+local Element = require "modules/Element"
+local React = require "modules/React"
+local UserContext = require "src/context/UserContext"
+local e = React.createElement
 
-StartMenu = function(props)
-    local buttons = {
-        Element.button({
-            top = 20,
-            left = 1,
-            width = 12,
-            height = 1
-        },"Settings")
-    }
-    
+local StartMenu = function(props)
     return Element.div({
         id = "startmenu",
         style = {
@@ -23,17 +17,13 @@ StartMenu = function(props)
             top = -5,
             backgroundColor = cc.colors.lightGray
         },
-        onClick = function(self,event)
-        end,
-        children = {
-            Element.button({
+        children = Element.button({
                 top = 20,
                 left = 1,
                 width = 12,
                 height = 1
             },"Settings")
-        }
     })
-    
-    return  startMenu
 end
+
+return StartMenu

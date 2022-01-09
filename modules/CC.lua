@@ -1,7 +1,6 @@
-cc =  (function()
-	return {
-		term = term, 
-		colors = colors,
-		paintutils = paintutils
-	}
-end)()
+local CC = {
+	term = term, 
+	colors = colors,
+	paintutils = paintutils
+}
+return CC

@@ -1,9 +1,10 @@
--- require("/disk/modules/CC")
--- require("/disk/src/App")
+local cc = require "modules/CC"
+local Element = require "modules/Element"
+local React = require "modules/React"
+local App = require "src/App"
+local WIDTH,HEIGHT = cc.term.getSize()
 
-WIDTH,HEIGHT = cc.term.getSize()
-
-root = Element.createElement("div",{
+local root = Element.createElement("div",{
     style = {
     width = WIDTH,
     height = HEIGHT,
