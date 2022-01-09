@@ -17,8 +17,9 @@ local StartMenu = function(props)
             top = -5,
             backgroundColor = cc.colors.lightGray
         },
-        children = Element.button({
-                top = 20,
+        children = 
+            Element.button({
+                top = 1,
                 left = 1,
                 width = 12,
                 height = 1
