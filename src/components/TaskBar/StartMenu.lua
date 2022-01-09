@@ -1,6 +1,3 @@
--- require("/disk/modules/CC")
--- require("/disk/modules/React")
--- require("/disk/modules/Element")
 local cc = require "modules/CC"
 local Element = require "modules/Element"
 local React = require "modules/React"
