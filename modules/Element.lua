@@ -7,7 +7,6 @@ local Elements = {}
 local focusedElement = nil
 local focusSet = false
 local Element = class({
-  id = #Elements,
   renderDepth = 1,
   children = {},
   content = false,
@@ -15,7 +14,6 @@ local Element = class({
     for k,v in pairs(props) do
       self[k] = v
     end
-    self.id = props.id or self.id
     self.style = Style.new(props.style or {})
     self.tag = tag
     self.content = content or self.content
@@ -28,7 +26,7 @@ local Element = class({
   end,
   appendChild = function(self,_element)
     _element.parent = self
-    _element.renderDepth = self.renderDepth+1
+    _element.renderDepth = self.renderDepth+2
     if _element.style.backgroundColor == "transparent" then
       _element.style.backgroundColor = self.style.backgroundColor     
     end
@@ -38,45 +36,43 @@ local Element = class({
     table.insert(self.children,1,_element)
   end,
   setFocus  = function(self,event)
-    focusedElement = self:getUID()
+    focusedElement = self.id
     focusSet = true
   end,
   monitor_touch = function(self,event)
       self:mouse_click(event)
+  end,
+  onClick = function()
+
   end,
   mouse_click = function(self,event)
     local left,top,right,bottom = self:getBounds()
     local x = event[3]
     local y = event[4]
     if x > left - 1 and x < right + 1 and y > top - 1 and y < bottom + 1 then  
-       
-      if self.onClick and focusSet == false then
-        self:setFocus(event)
-        self:onClick(event)
-      end
-      
+      self:setFocus(event)
+      self:onClick(event)
     end
   end,
   getBounds = function(self)
     
-    local offsetLeft = 1
+    local offsetLeft = 0
     local offsetTop = 1
     if self.parent then
-      offsetLeft = self.parent.offsetLeft + self.parent.style.marginLeft + self.parent.style.paddingLeft - 1
-      offsetTop = self.parent.offsetTop + self.parent.style.marginTop + self.parent.style.paddingTop
+      offsetLeft = self.parent.offsetLeft + self.parent.style.marginLeft + self.parent.style.paddingLeft
+      offsetTop = self.parent.offsetTop + self.parent.style.marginTop + self.parent.style.paddingTop 
     end
     local style = self.style
-    offsetLeft = offsetLeft + style.left + style.marginLeft 
+    offsetLeft = offsetLeft + style.left + style.marginLeft
     offsetTop = offsetTop + style.top + style.marginTop
     offsetRight = offsetLeft + style.width + style.paddingLeft + style.paddingRight
-    offsetBottom = offsetTop +  style.height + style.paddingTop + style.paddingBottom - 1
+    offsetBottom = offsetTop +  style.height + style.paddingTop + style.paddingBottom
     
     self.offsetLeft = offsetLeft
     self.offsetTop = offsetTop
     return offsetLeft ,offsetTop, offsetRight, offsetBottom
   end,
   render = function(self)
-    
     -- Set Local Variable to override if neccessary
     local style = self.style
     local color = style.color
@@ -96,7 +92,6 @@ local Element = class({
         cc.term.setTextColor(color)     
         cc.term.setCursorPos(left + style.paddingLeft+1,top + style.paddingTop)
         cc.term.write(self.content)
-        cc.term.setCursorPos(10,10)
       end;
       for k,v in ipairs(self.children) do
         v:render()
@@ -106,8 +101,8 @@ local Element = class({
     end
   end,
   getUID = function(self)
-    cc.term.setBackgroundColor(cc.colors.black)
-    cc.term.setTextColor(cc.colors.white)
+    -- cc.term.setBackgroundColor(cc.colors.black)
+    -- cc.term.setTextColor(cc.colors.white)
     -- local function recursiveParent(el,prevId)
     --   if el.parent then
     --     if el.parent.id then
@@ -115,28 +110,33 @@ local Element = class({
     --       return recursiveParent(el.parent,newId) 
     --     end
     --   end
-      return self.id
-    end
-    local id = recursiveParent(self,self.id)
-    return id
+    --   return prevId
+    -- end
+    --local id = recursiveParent(self,self.id)
+    return self.id
   end
 })
 
 local root = false
 
-local div = class({
+Element.div = class({
   constructor = function(self,props,content)
     self.super.constructor(self,"div",props,content)
-  end
-},Element)
+  end,
+  mouse_click = function(event)
+  end,
+},Element).new
 
-local button = class({
+Element.button = class({
   constructor = function(self,props,content)
     self.super.constructor(self,"button",props,content)
   end,
+  onClick = function(self,event)
+    self.super.onClick(self,event)
+  end,
   render = function(self)
     
-    if focusedElement == self:getUID() and self.style.focusedBackgroundColor then
+    if focusedElement == self.id and self.style.focusedBackgroundColor then
       local oldBgColor = self.style.backgroundColor
       self.style.backgroundColor = self.style.focusedBackgroundColor
       self.super.render(self)
@@ -145,9 +145,9 @@ local button = class({
       self.super.render(self)
     end
   end
-},Element)
+},Element).new
 
-local input = class({
+Element.input = class({
   constructor = function(self,props,content)
     self.super.constructor(self,"input",props,content)
   end,
@@ -168,7 +168,7 @@ local input = class({
       self:change(event[2])
     end
   end
-},Element)
+},Element).new
 
 Element.createElement = function(tag,props,content)
   return Element[tag](props,content)
@@ -176,7 +176,6 @@ end
   
 Element.attachRoot = function(child)
   local root = child
-  startEventLoop()
 end
   
 Element.triggerEvent = function(event)
@@ -190,9 +189,6 @@ Element.triggerEvent = function(event)
   end
 end
 
-Element.div = div.new
-Element.button = button.new
-Element.input = input.new
 Element.Elements = Elements
 
 return Element

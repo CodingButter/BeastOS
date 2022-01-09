@@ -14,15 +14,22 @@ local StartMenu = function(props)
             top = -5,
             backgroundColor = cc.colors.lightGray
         },
-        children = {Element.button({
+        children = Element.button({
             id="settingsBtn",
             style = {
+                paddingTop = 1,
+                paddingBottom = 1,
                 top = 1,
-                left = 1,
+                left = 0,
                 width = 12,
-                height = 1
-            }
-        },"Settings")}
+                height = 1,
+                backgroundColor = cc.colors.lightBlue,
+                focusedBackgroundColor = cc.colors.lime
+            },
+            onClick = function(event)
+                
+            end
+        },"Settings")
     })
 end
 

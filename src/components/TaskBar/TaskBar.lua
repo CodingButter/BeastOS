@@ -7,19 +7,16 @@ local StartMenu = require "src/components/TaskBar/StartMenu"
 e = React.createElement
 
 TaskBar = function(props)
-    local WIDTH,HEIGHT = term.getSize()
     local menu,updateMenu = React.useState(false)
     local function toggleMenu()
-        updateMenu(function(val)
-            return val == false
-        end)
+        updateMenu(menu==false)
     end
     local element =  e("div",{
         id = "taskbar",
         style = {
             height = 1,
-            width = WIDTH,
-            top = HEIGHT - 1,
+            width = props.width,
+            top = props.height - 1,
             backgroundColor = cc.colors.red,
             textColor = cc.colors.black
         },

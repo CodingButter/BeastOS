@@ -43,12 +43,12 @@ end
 local rerender = function()
   cc.term.setBackgroundColor(cc.colors.black)
   local el = render(rootComponent)
-  if utils.table.is(el,virtualDom) == false then
+  -- if utils.table.is(el,virtualDom) == false then
     rootElement.children = {}
       rootElement:appendChild(el)
       rootElement:render()
       virtualDom = el
-  end
+  -- end
 end
 
 React.useState = function(startState)
@@ -111,7 +111,7 @@ function sleep(n)  -- seconds
 end
 
 local startWorkLoop = function()
-    local speed = .5
+    local speed = .2
   for i=1,0,-speed do
     os.startTimer(1)
     sleep(speed)
@@ -133,8 +133,8 @@ React.renderDom = function(component,re,norender)
   rootElement:appendChild(element)
   rootElement:render()
   if norender then return end
-  startWorkLoop()
   Element.attachRoot(rootElement)
+  startWorkLoop()
 end
 
 React.createElement = class({

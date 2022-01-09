@@ -22,7 +22,7 @@ local BeastOs = function(props)
                 setUserName("Garry")
             end
         end,
-        content = "beast"
+        content = "BeastUI"
     })
 end
 

@@ -8,7 +8,7 @@ local root = Element.createElement("div",{
     style = {
     width = WIDTH,
     height = HEIGHT,
-    backgroundColor = cc.colors.blue
+    backgroundColor = cc.colors.black
     }
 })
 
