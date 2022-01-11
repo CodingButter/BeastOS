@@ -1,4 +1,3 @@
-debugger.stop()
 local utils = require "modules/Utils"
 local React = require "modules/React"
 local WindowContext = require "src/context/WindowContext"

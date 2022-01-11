@@ -1,3 +1,4 @@
+local Greed = require "src/applications/Greed"
 return {
-    require "src/applications/Greed"
+    Greed
 }
