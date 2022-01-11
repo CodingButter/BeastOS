@@ -9,7 +9,9 @@ e = React.createElement
 TaskBar = function(props)
     local menu,updateMenu = React.useState(false)
     local function toggleMenu()
-        updateMenu(menu==false)
+        local newVal = true
+        if menu then newVal = false else newVal = true end
+        updateMenu(newVal)
     end
     local element =  e("div",{
         id = "taskbar",
@@ -17,16 +19,17 @@ TaskBar = function(props)
             height = 1,
             width = props.width,
             top = props.height - 1,
-            backgroundColor = cc.colors.red,
-            textColor = cc.colors.black
+            backgroundColor = colors.red,
+            textColor = colors.black
         },
         children = (function()
             local chtbl = {}
             chtbl[#chtbl+1] = StartButton({
-                toggleMenu = toggleMenu
+                toggleMenu = toggleMenu,
+                height = props.height
             })
-            if menu then chtbl[#chtbl+1] = StartMenu() end
-            chtbl[#chtbl+1] = BeastOs()
+            if menu then chtbl[#chtbl+1] = StartMenu({toggleMenu = toggleMenu}) end
+            chtbl[#chtbl+1] = BeastOs({width=props.width})
             return chtbl
         end)()
     })

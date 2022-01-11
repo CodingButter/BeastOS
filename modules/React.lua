@@ -2,14 +2,75 @@ local cc = require "modules/CC"
 local class = require "modules/class"
 local Element = require "modules/Element"
 local utils = require "modules/Utils"
+local WIDTH,HEIGHT = term.getSize()
 
-local React = {}
 local rootComponent = function()end
 local rootElement = {}
 local hookStorage = {}
-local refStorage = {}
 local hookIndex = 1
 local virtualDom = {}
+
+local function useState(startState)
+  local state = hookStorage[hookIndex] or startState
+  local frozenIndex = hookIndex
+  local function setState(newVal)
+    if type(newVal) == "function" then
+      newVal = newVal(hookStorage[frozenIndex])
+    end
+    hookStorage[frozenIndex] = newVal
+    return newVal
+  end
+  hookIndex = hookIndex + 1
+  return state,setState
+end
+
+local function useRef(val)
+  local state = useState({current = val})
+  return state
+end
+
+local function useReducer(_reducer,initVal)
+  local state,setState = useState(initVal)
+  local function dispatch(action)
+      setState(_reducer(state,action))
+  end
+  return state,dispatch
+end
+
+local function createContext(val)
+  local frozenIndex = hookIndex
+  local state,setState = useState(val)
+  return {
+    index = frozenIndex,
+    Provider = function(self,props)
+      self.updater = props.updater
+      setState(props.value)
+      return props.children
+    end
+  }
+end
+
+local function useContext(context)
+  local value = hookStorage[context.index]
+  return value
+end
+
+
+local function setContext(context)
+  return context.updater
+end
+
+local function useEffect(cb,depArray)
+  local oldDeps = hookStorage[hookIndex]
+  local hasChanged = false
+  
+  if oldDeps then
+    hasChanged = utils.table.is(depArray,oldDeps) == false
+  end
+  if hasChanged then cb() end
+  hookStorage[hookIndex] = depArray
+end
+
 local function renderElement(c)
   local child = nil
   local el = Element[c.tag](c.props,"")
@@ -33,74 +94,18 @@ local function renderElement(c)
   return el
 end
 
-local render = function(c)
+local function render(c)
   hookIndex = 1
-  Element.Elements = {rootElement}
-  comp = renderElement(c())
-  return comp
+  return renderElement(c())
 end
 
-local rerender = function()
-  cc.term.setBackgroundColor(cc.colors.black)
+local function rerender()
+  term.setBackgroundColor(colors.black)
   local el = render(rootComponent)
-  -- if utils.table.is(el,virtualDom) == false then
     rootElement.children = {}
-      rootElement:appendChild(el)
-      rootElement:render()
-      virtualDom = el
-  -- end
-end
-
-React.useState = function(startState)
-  local state = hookStorage[hookIndex] or startState
-  local frozenIndex = hookIndex
-  local function setState(newVal)
-    if type(newVal) == "function" then
-      newVal = newVal(hookStorage[frozenIndex])
-    end
-    hookStorage[frozenIndex] = newVal
-    return newVal
-  end
-  hookIndex = hookIndex + 1
-  return state,setState
-end
-
-React.useRef = function(val)
-  local state = useState({current = val})
-  return state
-end
-
-React.createContext = function(val)
-  local frozenIndex = hookIndex
-  local state,setState = React.useState(val)
-  return {
-    index = frozenIndex,
-    Provider = function(self,props)
-      self.updater = props.updater
-      setState(props.value)
-      return props.children
-    end
-  }
-end
-
-React.useContext = function(context) 
-  local value = hookStorage[context.index]
-  return value
-end
-
-React.setContext = function(context)
-  return context.updater
-end
-
-React.useEffect = function(cb,depArray)
-  local oldDeps = hookStorage[hookIndex]
-  local hasChanged = false
-  
-  if oldDeps then
-    hasChanged = utils.table.is(depArray,oldDeps) == false
-  end
-  if hasChanged then cb() end
-  hookStorage[hookIndex] = depArray
+    rootElement:appendChild(el)
+    rootElement:render()
+    virtualDom = el
 end
 
 local clock = os.clock
@@ -110,9 +115,10 @@ function sleep(n)  -- seconds
   end
 end
 
-local startWorkLoop = function()
-    local speed = .2
+local function startWorkLoop()
+  local speed = .2
   for i=1,0,-speed do
+    rerender()
     os.startTimer(1)
     sleep(speed)
   end
@@ -124,9 +130,9 @@ local startWorkLoop = function()
       timer = os.startTimer(1)
     end
   end
-  end
-  
-React.renderDom = function(component,re,norender) 
+end
+
+local function renderDom(component,re,norender) 
   rootElement = re
   rootComponent = component
   local element = render(rootComponent)
@@ -137,7 +143,7 @@ React.renderDom = function(component,re,norender)
   startWorkLoop()
 end
 
-React.createElement = class({
+local createElement = class({
   constructor = function(self,tag,props,key,ref)
     self.tag = tag
     self.props = props
@@ -147,4 +153,14 @@ React.createElement = class({
   end
 }).new
 
-return React
+return {
+  useState = useState,
+  useRef = useRef,
+  useReducer = useReducer,
+  createContext = createContext,
+  useContext = useContext,
+  setContext = setContext,
+  useEffect = useEffect,
+  renderDom = renderDom,
+  createElement = createElement
+}

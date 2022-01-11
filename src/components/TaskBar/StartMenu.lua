@@ -2,6 +2,7 @@ local cc = require "modules/CC"
 local Element = require "modules/Element"
 local React = require "modules/React"
 local UserContext = require "src/context/UserContext"
+local Button = require "src/components/Button"
 local e = React.createElement
 
 local StartMenu = function(props)
@@ -12,24 +13,25 @@ local StartMenu = function(props)
             height = 5,
             left = 5,
             top = -5,
-            backgroundColor = cc.colors.lightGray
+            backgroundColor = colors.lightGray
         },
-        children = Element.button({
+        children = Button({
             id="settingsBtn",
             style = {
                 paddingTop = 1,
                 paddingBottom = 1,
-                top = 1,
+                top = 0,
                 left = 0,
                 width = 12,
                 height = 1,
-                backgroundColor = cc.colors.lightBlue,
-                focusedBackgroundColor = cc.colors.lime
+                backgroundColor = colors.lightBlue,
+                focusedBackgroundColor = colors.lime
             },
             onClick = function(event)
-                
-            end
-        },"Settings")
+                props.toggleMenu()
+            end,
+            content = "Settings"
+        })
     })
 end
 

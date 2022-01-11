@@ -12,8 +12,8 @@ local StartButton = function(props)
             width = 7,
             height = 1,
             left = 1,
-            backgroundColor = cc.colors.lightGray,
-            focusedBackgroundColor = cc.colors.lime
+            backgroundColor = colors.lightGray,
+            focusedBackgroundColor = colors.lime
         },
         onClick = function(self,event)
             props.toggleMenu()

@@ -1,7 +1,22 @@
 
 
 local Utils = {}
-
+Utils.switch = function(val,actions)
+   local action = actions[val] or actions.default or function() end
+   return action()
+end
+Utils.colors = {}
+Utils.colors.getCharOf = function( colour )
+   -- Incorrect values always convert to nil
+   if type(colour) == "number" then
+       local value = math.floor( math.log(colour) / math.log(2) ) + 1
+       if value >= 1 and value <= 16 then
+           local ret string.sub( "0123456789abcdef", value, value )
+           return ret
+       end
+   end
+   return " "
+end  
 Utils.table = {}
 Utils.table.copy = function(orig, copies,lvl)
    lvl = lvl or 0

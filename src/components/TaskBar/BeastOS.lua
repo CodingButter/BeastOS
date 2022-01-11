@@ -4,7 +4,7 @@ local React = require "modules/React"
 local UserContext = require "src/context/UserContext"
 
 local BeastOs = function(props)
-    local WIDTH = cc.term.getSize()
+    local WIDTH = term.getSize()
     local setUserName = React.setContext(UserContext)
     
     return Element.button(
@@ -12,10 +12,10 @@ local BeastOs = function(props)
         id="beastos",
         style = {
             paddingRight = 1,
-            left = WIDTH - 8,
+            left = props.width - 8,
             height = 1,
             width = 8,
-            color = cc.colors.lightBlue
+            color = colors.lightBlue
         }, 
         onClick = function(self,event)
             if setUserName then
