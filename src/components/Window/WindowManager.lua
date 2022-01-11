@@ -21,13 +21,13 @@ local windowReducer = function(state,action)
         return state
 end
 
-
+WindowContext.createContext(Applications)
 
 local WindowManager = function(props)
     local WIDTH,HEIGHT = term.getSize()
     local windows = utils.table.map(Applications,function(app,i)
         local windowState,windowDispatch = React.useReducer(windowReducer,{windowId=i,opened=false,fullscreen=true,maximized=false,left=0,top=0,width=15,height=15})
-        local Context = WindowContext[i]
+        local Context = WindowContext.contexts[i]
         return {
             Provider = Context.Provider,
             windowId = i,

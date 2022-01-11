@@ -8,7 +8,7 @@ local switch = utils.switch
 
 local Window = function(props)
     local WIDTH,HEIGHT = term.getSize()
-    local windowContext = WindowContext(props.windowId)
+    local windowContext = WindowContext.contexts[props.windowId]
     local windowState = React.useContext(windowContext)
     local setWindowState = React.setContext(windowContext)
    

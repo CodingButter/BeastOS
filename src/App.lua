@@ -2,7 +2,7 @@ local cc = require "modules/CC"
 local React = require "modules/React"
 local UserContext = require "src/context/UserContext"
 local TaskBar = require "src/components/TaskBar/TaskBar"
---local WindowManager = require "src/components/Window/WindowManager"
+local WindowManager = require "src/components/Window/WindowManager"
 local e = React.createElement
 App = function()
     local WIDTH,HEIGHT = term.getSize()
@@ -18,7 +18,7 @@ App = function()
             value=user,
             updater=setUser,
             children = {
-               -- WindowManager(),
+                WindowManager(),
                 TaskBar({setUser=setUser,width=WIDTH,height=HEIGHT})
             }
         })
