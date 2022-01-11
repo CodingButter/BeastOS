@@ -1,4 +1,4 @@
-local cc = require "modules/CC"
+
 local class = require "modules/Class"
 local Style = require "modules/Style"
 local utils = require "modules/Utils"

@@ -1,4 +1,3 @@
-local cc = require "modules/CC"
 local class = require "modules/class"
 local Element = require "modules/Element"
 local utils = require "modules/Utils"
@@ -7,17 +6,19 @@ local WIDTH,HEIGHT = term.getSize()
 local rootComponent = function()end
 local rootElement = {}
 local hookStorage = {}
+local contextStorage = {}
 local hookIndex = 1
-local virtualDom = {}
 
-local function useState(startState)
-  local state = hookStorage[hookIndex] or startState
+local function useState(initState)
+  local state = hookStorage[hookIndex] or initState
+  hookStorage[hookIndex] = state
   local frozenIndex = hookIndex
   local function setState(newVal)
     if type(newVal) == "function" then
       newVal = newVal(hookStorage[frozenIndex])
     end
     hookStorage[frozenIndex] = newVal
+    
     return newVal
   end
   hookIndex = hookIndex + 1
@@ -38,27 +39,21 @@ local function useReducer(_reducer,initVal)
 end
 
 local function createContext(val)
-  local frozenIndex = hookIndex
-  local state,setState = useState(val)
+  local index = #contextStorage + 1
+  contextStorage[index] = val
   return {
-    index = frozenIndex,
+    index = index,
     Provider = function(self,props)
-      self.updater = props.updater
-      setState(props.value)
+      contextStorage[index] = props.value
       return props.children
     end
   }
 end
 
 local function useContext(context)
-  local value = hookStorage[context.index]
-  return value
+  return contextStorage[context.index]
 end
 
-
-local function setContext(context)
-  return context.updater
-end
 
 local function useEffect(cb,depArray)
   local oldDeps = hookStorage[hookIndex]
@@ -98,14 +93,14 @@ local function render(c)
   hookIndex = 1
   return renderElement(c())
 end
-
+local canvas = window.create(term.current(),1,1,WIDTH,HEIGHT,true)
 local function rerender()
-  term.setBackgroundColor(colors.black)
+  local WIDTH,HEIGHT = term.getSize()
+  
   local el = render(rootComponent)
     rootElement.children = {}
     rootElement:appendChild(el)
     rootElement:render()
-    virtualDom = el
 end
 
 local clock = os.clock

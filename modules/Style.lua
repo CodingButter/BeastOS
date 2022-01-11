@@ -1,5 +1,5 @@
 local class = require "modules/Class"
-local cc = require "modules/CC"
+
 
 local Style =  class({
   zIndex = 1,
@@ -22,8 +22,8 @@ local Style =  class({
   marginTop = 0,
   marginRight = 0,
   marginBottom = 0,
-  backgroundColor = "transparent",
-  focusedBackgroundColor = color,
+  backgroundColor = colors.lightGray,
+  focusedBackgroundColor = colors.blue,
   color = colors.black,
   position = "relative",
   margin = function(self,val)
