@@ -1,3 +1,4 @@
+local utils = require "modules/Utils"
 local React = require "modules/React"
 local TaskBar = require "src/components/TaskBar"
 local Apps = require "src/applications"
@@ -15,6 +16,7 @@ local Desktop = function(props)
         children = (function()
             local children = {}
             for i,v in pairs(Apps) do
+                
                 children[#children+1] = Window({
                     windowId=i,
                     children = v.application,

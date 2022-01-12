@@ -52,7 +52,7 @@ local Element = class({
     local left,top,width,height = self:getBounds()
     local x = event[3]
     local y = event[4]
-    if x >= left  and x <= left + width  and y >= top and y <= top + width  then  
+    if x >= left  and x < left + width  and y >= top and y < top + height  then  
         self:setFocus(event)
         if self.onClick then 
           self:onClick(event)

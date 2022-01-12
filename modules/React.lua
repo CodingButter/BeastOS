@@ -106,7 +106,7 @@ local function rerender()
 end
 
 local function startWorkLoop()
-  local speed = .2
+  local speed = 1
   for i=1,0,-speed do
     rerender()
     os.startTimer(1)

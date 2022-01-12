@@ -8,6 +8,7 @@ local useWindowContext = require "src/hooks/useWindowContext"
 local e = React.createElement
 
 local CloseButton = function(props)
+    --utils.debugger.debugPrint(props.dispatch)
     return Button({
         id = "close_btn",
         style = {
@@ -29,9 +30,9 @@ local MaximizeButton = function(props)
     return Button({
         id = "maximize_btn",
         style = {
-            left=props.right - 15,
+            left=props.right - 6,
             top=0,
-            width = 1,
+            width = 3,
             height =1,
             backgroundColor = colors.lightBlue,
             textColor = colors.white
@@ -47,7 +48,7 @@ local MinimizeButton = function(props)
     return Button({
         id = "minimize_btn",
         style = {
-            left = props.right - 10,
+            left = props.right - 9,
             top = 0,
             width = 3,
             height =1,
@@ -64,10 +65,7 @@ end
 
 local TitleBar = function(props)
     local WIDTH , HEIGHT = term.getSize()
-    utils.debugger.stop()
     local windowState,windowDispatch = useWindowContext(props.windowId)
-    utils.debugger.print(utils.table.serialize(windowState) .. "\n" .. utils.table.serialize(windowDispatch))
-    utils.debugger.stop()
     return e("div",{
         id = "title_bar",
         style = {
@@ -77,9 +75,9 @@ local TitleBar = function(props)
             backgroundColor = colors.lightGray
         },
         children = {
-            CloseButton({right=WIDTH,state=props.windowState,dispatch=props.windowDispatch}),
-            MinimizeButton({right=WIDTH,state=props.windowState,dispatch=props.windowDispatch}),
-            MaximizeButton({right=WIDTH,state=props.windowState,dispatch=props.windowDispatch})
+            CloseButton({right=WIDTH,state=windowState,dispatch=windowDispatch}),
+            MinimizeButton({right=WIDTH,state=windowState,dispatch=windowDispatch}),
+            MaximizeButton({right=WIDTH,state=windowState,dispatch=windowDispatch})
         }
     })
 

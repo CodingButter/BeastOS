@@ -3,5 +3,9 @@ return {
     {
         application = Greed,
         title = "Greed",
+    },
+    {
+        application = Greed,
+        title = "Greed",
     }
 }

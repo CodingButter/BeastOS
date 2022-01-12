@@ -43,7 +43,7 @@ Utils.table.copy = function(orig, copies,lvl)
 end
 Utils.table.map = function(_tbl, f)
    local t = {}
-   if type(_tbl)==_tbl then
+   if type(_tbl)=="table" then
       for k,v in pairs(_tbl) do
             t[k] = f(v,k)
       end
@@ -103,7 +103,7 @@ Utils.table.save = function(data, filename)
 
 Utils.debugger = peripheral.find "debugger"
 Utils.debugger.debugPrint = function(obj)
-   Utils.debugger.print(tostring(pretty.pretty(obj)))
+   Utils.debugger.print(Utils.table.serialize(obj))
 end
 local WIDTH,HEIGHT = term.getSize()
 Utils.window = window.create(term.current(),1,1,WIDTH,HEIGHT,true)
