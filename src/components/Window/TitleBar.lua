@@ -5,7 +5,6 @@ local Element = require "modules/Element"
 local symbols = require "src/configs/symbols"
 local Button = require "src/components/Button"
 local useWindowContext = require "src/hooks/useWindowContext"
-local WindowManagerContext = require "src/context/WindowManagerContext"
 local e = React.createElement
 
 local CloseButton = function(props)
@@ -60,7 +59,7 @@ end
 
 
 local TitleBar = function(props)
-    local windowManagerState,windowManagerDispatch = table.unpack(React.useContext(WindowManagerContext))
+    local windowState,windowDispatch = useWindowContext(props.windowid)
     return e("div",{
         style = {
             width = props.width,

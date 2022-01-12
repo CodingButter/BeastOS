@@ -1,7 +1,7 @@
 local utils = require "modules/Utils"
 local pretty = require "cc.pretty"
 local React = require "modules/React"
-local WindowManagerContext = require "src/context/WindowManagerContext"
+local useWindowContext = require "src/hooks/useWindowContext"
 local TitleBar = require "src/components/Window/TitleBar"
 local e = React.createElement
 local switch = utils.switch
@@ -33,23 +33,25 @@ local windowReducer = function(state,action)
 end
 
 local Window = function(props)
-    local windowManagerState,windowManagerDispatch = table.unpack(React.useContext(WindowManagerContext))
+    local windowManagerState,windowManagerDispatch = useWindowContext(props.windowId)
     local windowState,windowDispatch = React.useReducer(windowReducer,{isActive=false,windowId=props.windowId,opened=false,fullscreen=true,maximized=true,left=0,top=0,width=15,height=15})
     windowManagerDispatch({
         type = "insert",
         payload = {
             windowId = props.windowId,
             windowState = windowState,
-            windowDispatch = windowState
+            windowDispatch = windowDispatch
         }
     })
     local WIDTH,HEIGHT = term.getSize()
     local width = WIDTH
     local height = HEIGHT - 1
+    utils.debugger.print(utils.table.serialize(windowState))
     if windowState.fullscreen == false then
         width = windowState.width
         height = windowState.height
     end
+
     return (function()
         if windowState.maximized then
             return  e("div",{

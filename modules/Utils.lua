@@ -7,7 +7,6 @@ Utils.switch = function(val,actions)
 end
 Utils.colors = {}
 Utils.colors.getCharOf = function( colour )
-   -- Incorrect values always convert to nil
    if type(colour) == "number" then
        local value = math.floor( math.log(colour) / math.log(2) ) + 1
        if value >= 1 and value <= 16 then

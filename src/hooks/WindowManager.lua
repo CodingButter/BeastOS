@@ -5,7 +5,6 @@ local WindowManagerContext = require "src/context/WindowManagerContext"
 local Desktop = require "src/components/Desktop"
 local switch = utils.switch
 local reducer = function(state,action)
-    print(utils.table.serialize(state))
     switch(action.type,{
         ["insert"] = function()
             state[action.payload.windowId] = {
@@ -17,8 +16,7 @@ local reducer = function(state,action)
             state[action.payload.windowId] = nil
         end
     })
-    print(utils.table.serialize(state))
-    error(1)
+
     return state
 end
 
