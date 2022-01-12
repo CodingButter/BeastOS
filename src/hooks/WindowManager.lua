@@ -7,13 +7,13 @@ local switch = utils.switch
 local reducer = function(state,action)
     switch(action.type,{
         ["insert"] = function()
-            state[action.payload.windowId] = {
+            state[1][action.payload.windowId] = {
                 action.payload.windowState,
                 action.payload.windowDispatch
             }
         end,
         ["remove"] = function()
-            state[action.payload.windowId] = nil
+            state[1][action.payload.windowId] = nil
         end
     })
 
@@ -22,12 +22,13 @@ end
 
 local WindowManager = function(props)
     local WIDTH,HEIGHT = term.getSize()
-    local windows,dispatch = React.useReducer(reducer,{})
+    local windows,dispatch = React.useReducer(reducer,{{{title="window",isActive=false,windowId=1,opened=false,fullscreen=true,maximized=true,left=0,top=0,width=15,height=15},function()end},function()end})
 
     return e("div",{
+        id = "window_manager",
         style = {
             width = WIDTH,
-            height = HEIGHT-1,
+            height = HEIGHT-2,
             backgroundColor = colors.blue
         },
         children = WindowManagerContext:Provider({

@@ -1,4 +1,7 @@
 local Greed = require "src/applications/Greed"
 return {
-    Greed
+    {
+        application = Greed,
+        title = "Greed",
+    }
 }

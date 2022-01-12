@@ -8,23 +8,23 @@ local WindowManagerContext = require "src/context/WindowManagerContext"
 local e = React.createElement
 
 local StartMenu = function(props)
-    local windows,dispatch = table.unpack(React.useContext(WindowManagerContext))
+    local windows,dispatch = React.useContext(WindowManagerContext)
+    utils.debugger.print(utils.table.serialize(windows))
     return e("div",{
         id = "startmenu",
         style = {
-            width = 12,
-            height = 5,
-            left = 5,
-            top = -5,
+            width = 10,
+            height = #windows,
+            left = 2,
+            top = -#windows,
             backgroundColor = colors.lightGray
         },
-        children = (function()
-            return utils.table.map(windows,function(window,i)
+        children = utils.table.map(windows,function(window,i)
                 local windowState,windowDispatch = table.unpack(window)
                 return Button({
                 id="window-"..i,
                 style = {
-                    top = i-1,
+                    top = i,
                     left = 0,
                     width = 12,
                     height = 1,
@@ -34,10 +34,9 @@ local StartMenu = function(props)
                 onClick = function(event)
                     windowDispatch({type="open"})
                 end,
-                content = App
+                content = windowState.title   
             })
         end)
-    end)()
     })
 end
 

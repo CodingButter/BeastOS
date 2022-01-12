@@ -6,10 +6,12 @@ local e = React.createElement
 App = function()
     local WIDTH, HEIGHT = term.getSize()
     return e("div",{
-        id="mainElement",
+        id="main_element",
         style = {
+            left = 1,
+            top = 1,
             width = WIDTH,
-            height = HEIGHT-1,
+            height = HEIGHT,
             backgroundColor = "transparent"
         },
         children = {

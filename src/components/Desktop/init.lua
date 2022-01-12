@@ -7,8 +7,9 @@ local Desktop = function(props)
     local WIDTH,HEIGHT = term.getSize()
     return e("div",{
         style = {
+            id = "desktop",
             width = WIDTH,
-            height = HEIGHT-1,
+            height = HEIGHT,
             backgroundColor = colors.green
         },
         children = (function()
@@ -16,7 +17,8 @@ local Desktop = function(props)
             for i,v in pairs(Apps) do
                 children[#children+1] = Window({
                     windowId=i,
-                    children = v
+                    children = v.application,
+                    title = v.title
                 })
             end
             children[#children+1] = TaskBar()

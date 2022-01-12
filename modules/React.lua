@@ -93,21 +93,16 @@ local function render(c)
   hookIndex = 1
   return renderElement(c())
 end
-local canvas = window.create(term.current(),1,1,WIDTH,HEIGHT,true)
+
 local function rerender()
   local WIDTH,HEIGHT = term.getSize()
   
   local el = render(rootComponent)
     rootElement.children = {}
     rootElement:appendChild(el)
+    utils.window.setVisible(false)
     rootElement:render()
-end
-
-local clock = os.clock
-function sleep(n)  -- seconds
-  local t0 = clock()
-  while clock() - t0 <= n do
-  end
+    utils.window.setVisible(true)
 end
 
 local function startWorkLoop()
@@ -123,6 +118,10 @@ local function startWorkLoop()
     rerender()
     if event[1] == "timer" then
       timer = os.startTimer(1)
+    end
+    if event[1] == "term_resize" then
+      local WIDTH,HEIGHT = term.getSize()
+      utils.window.reposition(0, 0 , WIDTH, HEIGHT)
     end
   end
 end

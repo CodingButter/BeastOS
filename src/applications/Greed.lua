@@ -8,7 +8,7 @@ local Greed = function(props)
             style={
                 width=10,
                 height=10,
-                backgroundColor = colors.blue
+                backgroundColor = colors.red
             }
         })
 end

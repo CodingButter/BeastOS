@@ -9,6 +9,7 @@ local e = React.createElement
 
 local CloseButton = function(props)
     return Button({
+        id = "close_btn",
         style = {
             left = props.right - 3,
             top = 0,
@@ -26,15 +27,17 @@ end
 
 local MaximizeButton = function(props)
     return Button({
+        id = "maximize_btn",
         style = {
-            left=props.right - 7,
+            left=props.right - 15,
             top=0,
-            width = 3,
+            width = 1,
             height =1,
-            backgroundColor = colors.blue,
+            backgroundColor = colors.lightBlue,
             textColor = colors.white
         }, 
         onClick = function(self,event)
+            
             props.dispatch({type="maximize"})
         end,
         content = symbols.maximize
@@ -42,6 +45,7 @@ local MaximizeButton = function(props)
 end
 local MinimizeButton = function(props)
     return Button({
+        id = "minimize_btn",
         style = {
             left = props.right - 10,
             top = 0,
@@ -59,17 +63,23 @@ end
 
 
 local TitleBar = function(props)
-    local windowState,windowDispatch = useWindowContext(props.windowid)
+    local WIDTH , HEIGHT = term.getSize()
+    utils.debugger.stop()
+    local windowState,windowDispatch = useWindowContext(props.windowId)
+    utils.debugger.print(utils.table.serialize(windowState) .. "\n" .. utils.table.serialize(windowDispatch))
+    utils.debugger.stop()
     return e("div",{
+        id = "title_bar",
         style = {
-            width = props.width,
+            width = WIDTH,
             height = 1,
+            top =0,
             backgroundColor = colors.lightGray
         },
         children = {
-            CloseButton({right=props.width,state=windowState,dispatch=windowDispatch}),
-            MinimizeButton({right=props.width,state=windowState,dispatch=windowDispatch}),
-            MaximizeButton({right=props.width,state=windowState,dispatch=windowDispatch})
+            CloseButton({right=WIDTH,state=props.windowState,dispatch=props.windowDispatch}),
+            MinimizeButton({right=WIDTH,state=props.windowState,dispatch=props.windowDispatch}),
+            MaximizeButton({right=WIDTH,state=props.windowState,dispatch=props.windowDispatch})
         }
     })
 

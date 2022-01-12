@@ -24,12 +24,11 @@ TaskBar = function(props)
         },
         children = (function()
             local chtbl = {}
-            chtbl[#chtbl+1] = StartButton({
-                toggleMenu = toggleMenu,
-                height = HEIGHT
-            })
             if menu then chtbl[#chtbl+1] = StartMenu({toggleMenu = toggleMenu}) end
             chtbl[#chtbl+1] = BeastOs({width=WIDTH})
+            chtbl[#chtbl+1] = StartButton({
+                toggleMenu = toggleMenu,
+            })
             return chtbl
         end)()
     })
