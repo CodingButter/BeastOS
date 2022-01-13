@@ -7,12 +7,20 @@ local Greed = function(props)
     local elWidth = 15
     return React.createElement("div",{
         style={
+            top=3,
             width=elWidth,
-            height=5,
+            height=8,
             left=props.width/2 - elWidth/2,
-            backgroundColor = colors.red
+            backgroundColor = colors.red,
+            color = colors.black
         },
-        children ={}
+        children ={
+            Element.div({
+                style={
+                    textColor=colors.black
+                }
+            },"GREED")
+        }
     })
 end
 

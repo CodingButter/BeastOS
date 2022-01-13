@@ -2,6 +2,7 @@ local pretty = require "cc.pretty"
 local utils = require "modules/Utils"
 local React = require "modules/React"
 local WindowManagerContext = require "src/context/WindowManagerContext"
+local Apps = require "src/applications"
 local Desktop = require "src/components/Desktop"
 
 local switch = utils.switch
@@ -34,8 +35,14 @@ end
 
 local WindowManager = function(props)
     local WIDTH,HEIGHT = term.getSize()
-    local windows,dispatch = React.useReducer(reducer,{{{title="window",isActive=false,windowId=1,open=false,fullscreen=true,maximized=true,left=0,top=0,width=15,height=15},function()end}})
+    local windows,dispatch = React.useReducer(reducer,{})
 
+    table.sort(windows,function(a,b)
+        return a[1].depth<b[1].depth
+    end)
+    local windowApps = utils.table.map(windows,function(window,i)
+        return window[1]
+    end)
     return React.createElement("div",{
         id = "window_manager",
         style = {
@@ -45,7 +52,9 @@ local WindowManager = function(props)
         },
         children = WindowManagerContext:Provider({
             value = {windows,dispatch},
-            children = {Desktop()}
+            children = {Desktop({
+                children = #windowApps>0 and windowApps or Apps
+            })}
         })
     })
 end

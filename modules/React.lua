@@ -114,8 +114,8 @@ local function startWorkLoop()
   end
   while true do
     event = {os.pullEvent()}
-    Element.triggerEvent(event)
     rerender()
+    Element.triggerEvent(event)
     if event[1] == "timer" then
       timer = os.startTimer(1)
     end
@@ -153,7 +153,6 @@ return {
   useReducer = useReducer,
   createContext = createContext,
   useContext = useContext,
-  setContext = setContext,
   useEffect = useEffect,
   renderDom = renderDom,
   createElement = createElement

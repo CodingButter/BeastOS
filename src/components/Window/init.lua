@@ -39,7 +39,7 @@ end
 local Window = function(props)
     
     local windowManagerState,windowManagerDispatch = table.unpack(React.useContext(WindowManagerContext))
-    local windowState,windowDispatch = React.useReducer(windowReducer,{title=props.title,depth=props.windowId,windowId=props.windowId,open=false,fullscreen=true,maximized=true,left=0,top=0,width=15,height=15})
+    local windowState,windowDispatch = React.useReducer(windowReducer,{application=props.children,title=props.title,depth=props.windowId,windowId=props.windowId,open=false,fullscreen=true,maximized=true,left=0,top=0,width=15,height=15})
     windowManagerDispatch({
         type = "insert",
         payload = {
@@ -67,7 +67,7 @@ local Window = function(props)
                             top = 1,
                             left = 1,
                             width = width,
-                            height = height,
+                            height = height-1,
                             backgroundColor = colors.black,    
                         }
                     }),
@@ -75,9 +75,9 @@ local Window = function(props)
                         id = "window_" .. props.windowId,
                         style = {
                             left = windowState.left,
-                            top = windowState.top,
+                            top = windowState.top+1,
                             width = width,
-                            height = height,
+                            height = height-1,
                             backgroundColor = colors.blue
                         },
                         children ={

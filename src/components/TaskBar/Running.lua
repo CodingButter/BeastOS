@@ -32,7 +32,7 @@ local Running = function(props)
                     end)()
                 },
                 onClick = function(event)
-                    if windowState.maximized then 
+                    if windowState.maximized and windowState.depth==#runningWindows then 
                         windowDispatch({type = "minimize"})
                     else
                         windowDispatch({type="maximize"})
