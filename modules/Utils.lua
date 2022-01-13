@@ -43,18 +43,23 @@ Utils.table.copy = function(orig, copies,lvl)
 end
 Utils.table.map = function(_tbl, f)
    local t = {}
+   local i = 1
    if type(_tbl)=="table" then
       for k,v in pairs(_tbl) do
-            t[k] = f(v,k)
+            t[i] = f(v,i,k)
+            i = i + 1
       end
    end
    return t
 end
 
 Utils.table.filter = function(_tbl,f)
+   
    local t = {}
+   local i = 1
    for k,v in pairs(_tbl) do
-         if f(v,k) then t[k] = v; end
+         if f(v,i,k) then t[i] = v; end
+         i = i + 1
    end
    return t
 end
@@ -101,7 +106,7 @@ Utils.table.save = function(data, filename)
    h:close()
  end
 
-Utils.debugger = peripheral.find "debugger"
+Utils.debugger = peripheral.find "debugger" or term
 Utils.debugger.debugPrint = function(obj)
    Utils.debugger.print(Utils.table.serialize(obj))
 end

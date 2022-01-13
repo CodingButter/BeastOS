@@ -4,11 +4,9 @@ local React = require "modules/React"
 local Element = require "modules/Element"
 local symbols = require "src/configs/symbols"
 local Button = require "src/components/Button"
-local useWindowContext = require "src/hooks/useWindowContext"
-local e = React.createElement
+local WindowManagerContext = require "src/context/WindowManagerContext"
 
 local CloseButton = function(props)
-    --utils.debugger.debugPrint(props.dispatch)
     return Button({
         id = "close_btn",
         style = {
@@ -20,7 +18,9 @@ local CloseButton = function(props)
             textColor = colors.white
         },
         onClick = function(self,event)
-            props.dispatch({type="close"})
+            if props.state.depth == #props.windows then
+                props.dispatch({type="close"})
+            end
         end,
         content = symbols.close
     })
@@ -28,7 +28,7 @@ end
 
 local MaximizeButton = function(props)
     return Button({
-        id = "maximize_btn",
+        id = "full_screen",
         style = {
             left=props.right - 6,
             top=0,
@@ -38,10 +38,11 @@ local MaximizeButton = function(props)
             textColor = colors.white
         }, 
         onClick = function(self,event)
-            
-            props.dispatch({type="maximize"})
+            if props.state.depth == #props.windows then
+                props.dispatch({type="toggle_fullscreen"})
+            end
         end,
-        content = symbols.maximize
+        content = props.state.fullscreen and symbols.windowed or symbols.fullscreen
     })
 end
 local MinimizeButton = function(props)
@@ -56,7 +57,9 @@ local MinimizeButton = function(props)
             textColor = colors.white
         },
         onClick = function(self,event)
-            props.dispatch({type="minimize"})
+            if props.state.depth == #props.windows then
+                props.dispatch({type="minimize"})
+            end
         end,
         content = symbols.minimize
     })
@@ -64,21 +67,27 @@ end
 
 
 local TitleBar = function(props)
-    local WIDTH , HEIGHT = term.getSize()
-    local windowState,windowDispatch = useWindowContext(props.windowId)
-    return e("div",{
+    local windows,windowsDispatch = table.unpack(React.useContext(WindowManagerContext))
+    local windowState,windowDispatch = table.unpack(windows[props.windowId])
+    
+    return React.createElement("div",{
         id = "title_bar",
         style = {
-            width = WIDTH,
+            width = props.width,
             height = 1,
             top =0,
             backgroundColor = colors.lightGray
         },
         children = {
-            CloseButton({right=WIDTH,state=windowState,dispatch=windowDispatch}),
-            MinimizeButton({right=WIDTH,state=windowState,dispatch=windowDispatch}),
-            MaximizeButton({right=WIDTH,state=windowState,dispatch=windowDispatch})
-        }
+            CloseButton({right=props.width,windows=windows,state=windowState,dispatch=windowDispatch}),
+            MinimizeButton({right=props.width,windows=windows,state=windowState,dispatch=windowDispatch}),
+            MaximizeButton({right=props.width,windows=windows,state=windowState,dispatch=windowDispatch})
+        },
+        onClick = function(event)
+            if windowState.depth < #windows then
+                windowsDispatch({type="setDepth",payload=windowState.windowId})
+            end
+        end
     })
 
 end

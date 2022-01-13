@@ -41,6 +41,9 @@ local Element = class({
   prependChild = function(self,_element)
     table.insert(self.children,1,_element)
   end,
+  loseFocus = function()
+
+  end,
   setFocus  = function(self,event)
     focusedElement = self:getUID()
   end,
@@ -59,6 +62,7 @@ local Element = class({
         end
         return true
     end
+    self:loseFocus()
     return false
   end,
   getBounds = function(self)  
@@ -157,13 +161,23 @@ local button = class({
   end
 },Element)
 
+local u = class({
+  style = Style.new({
+    backgroundColor = colors.gray,
+    focusedBackgroundColor = colors.lightGray,
+  }),
+  constructor = function(self,props,content)
+    self.super.constructor(self,"u",props,content)
+  end
+},Element)
+
 local input = class({
   constructor = function(self,props,content)
     self.super.constructor(self,"input",props,content)
   end,
   change = function(self,value)
     self.content = self.content .. value
-    self:onChange(value)
+    self:onChange()
   end,
   setFocus = function(self)
     self.super:setFocus()
@@ -196,6 +210,7 @@ end
 Element.div = div.new
 Element.button = button.new
 Element.input = input.new
+Element.u = u.new
 Element.Elements = Elements
 
 return Element

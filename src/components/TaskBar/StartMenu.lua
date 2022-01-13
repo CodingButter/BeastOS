@@ -3,24 +3,24 @@ local utils = require "modules/Utils"
 local Element = require "modules/Element"
 local React = require "modules/React"
 local Button = require "src/components/Button"
+local WindowManagerContext = require "src/context/WindowManagerContext"
 
-local e = React.createElement
+
 
 local StartMenu = function(props)
-
-
-
+    local windowManagerState,windowManagerDispatch = table.unpack(React.useContext(WindowManagerContext))
     
-    return e("div",{
+    return React.createElement("u",{
         id = "startmenu",
         style = {
             width = 10,
-            height = #props.windows,
+            height = #windowManagerState,
             left = 2,
-            top = -#props.windows,
+            top = -#windowManagerState,
             backgroundColor = colors.lightGray
         },
-        children = utils.table.map(props.windows,function(window,i)
+        loseFocus = props.loseFocus,
+        children = utils.table.map(windowManagerState,function(window,i)
                 local windowState,windowDispatch = table.unpack(window)
                 return Button({
                 id="window-"..i,
@@ -34,6 +34,7 @@ local StartMenu = function(props)
                 },
                 onClick = function(event)
                     windowDispatch({type="open"})
+                    windowManagerDispatch({type="setDepth", payload=windowState.windowId})
                 end,
                 content = windowState.title   
             })

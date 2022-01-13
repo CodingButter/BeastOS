@@ -3,10 +3,10 @@ local React = require "modules/React"
 local TaskBar = require "src/components/TaskBar"
 local Apps = require "src/applications"
 local Window = require "src/components/Window"
-local e = React.createElement
+
 local Desktop = function(props)
     local WIDTH,HEIGHT = term.getSize()
-    return e("div",{
+    return React.createElement("div",{
         style = {
             id = "desktop",
             width = WIDTH,

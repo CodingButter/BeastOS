@@ -1,16 +1,19 @@
 
 local Element = require "modules/Element"
 local React = require "modules/React"
-local e = React.createElement
+
 
 local Greed = function(props)
-    return e("div",{
-            style={
-                width=10,
-                height=10,
-                backgroundColor = colors.red
-            }
-        })
+    local elWidth = 15
+    return React.createElement("div",{
+        style={
+            width=elWidth,
+            height=5,
+            left=props.width/2 - elWidth/2,
+            backgroundColor = colors.red
+        },
+        children ={}
+    })
 end
 
 return Greed

@@ -1,8 +1,9 @@
 local Greed = require "src/applications/Greed"
+local BulletinBoard = require "src/applications/BulletinBoard"
 return {
     {
-        application = Greed,
-        title = "Greed",
+        application = BulletinBoard,
+        title = "Bulletin",
     },
     {
         application = Greed,

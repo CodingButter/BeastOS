@@ -2,10 +2,10 @@
 local React = require "modules/React"
 local WindowManager = require "src/hooks/WindowManager"
 local TaskBar = require "src/components/TaskBar"
-local e = React.createElement
+
 App = function()
     local WIDTH, HEIGHT = term.getSize()
-    return e("div",{
+    return React.createElement("div",{
         id="main_element",
         style = {
             left = 1,
