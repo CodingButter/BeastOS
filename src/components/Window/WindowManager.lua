@@ -27,7 +27,7 @@ local reducer = function(state,action)
                     level = windowState.depth - 1 
                 end
                 dispatch({type=_type,payload=level})
-                utils.debugger.print("setActive depth of id:(".. windowState.windowId ..") " .. windowState.title .." to " .. level)
+               -- utils.debugger.print("setActive depth of id:(".. windowState.windowId ..") " .. windowState.title .." to " .. level)
             end
         end,
         ["setInactive"] = function()
@@ -39,7 +39,7 @@ local reducer = function(state,action)
                     level = windowState.depth < #runningWindows and windowState.depth + 1 or #runningWindows
                 end
                 dispatch({type=_type,payload=level})
-                utils.debugger.print("setInactive depth of id:(".. windowState.windowId ..") " .. windowState.title .." to " .. level)
+               -- utils.debugger.print("setInactive depth of id:(".. windowState.windowId ..") " .. windowState.title .." to " .. level)
             end
         end
     })

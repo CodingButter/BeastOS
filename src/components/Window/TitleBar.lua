@@ -68,7 +68,7 @@ end
 
 local TitleBar = function(props)
     local windows,windowsDispatch = table.unpack(React.useContext(WindowManagerContext))
-    local windowState,windowDispatch = table.unpack(windows[props.windowId])
+    local windowState,windowDispatch = table.unpack(windows[props.windowId] or {{},function()end})
     local runningWindows = utils.table.filter(windows,function(window) 
         local windowState,windowDispatch = table.unpack(window)
         return windowState.open

@@ -111,6 +111,9 @@ Utils.debugger = peripheral.find "debugger" or term
 Utils.debugger.printTable = function(obj)
    Utils.debugger.print(Utils.table.serialize(obj))
 end
+local monitor = peripheral.find "monitor"
+monitor.setTextScale(.5)
+term.redirect(monitor)
 local WIDTH,HEIGHT = term.getSize()
 Utils.window = window.create(term.current(),1,1,WIDTH,HEIGHT,true)
 return Utils

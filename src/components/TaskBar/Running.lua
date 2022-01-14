@@ -5,17 +5,13 @@ local Button = require "src/components/Button"
 
 local Running = function(props)
     local windows,windowsDispatch = table.unpack(React.useContext(WindowManagerContext))
-    local runningWindows = utils.table.filter(windows,function(window) 
-        local windowState,windowDispatch = table.unpack(window)
-        return windowState.open
-    end)    
     local iconWidth = 8
     return React.createElement("div",{
         style = {
             left = 8,
             height = 1
         },
-        children = utils.table.map(runningWindows,function(window,i,k)
+        children = utils.table.map(windows,function(window,i,k)
             local windowState,windowDispatch = table.unpack(window)
             return Button({
                 content = windowState.title:sub(1,iconWidth-2) ,
@@ -24,6 +20,7 @@ local Running = function(props)
                     width = iconWidth,
                     height = 1,
                     left=2+((i-1)*(iconWidth+1)),
+                    display = windowState.open and "block" or "none",
                     backgroundColor = (function()
                         if windowState.maximized == false then return colors.gray end
                         return colors.lightGray

@@ -18,8 +18,6 @@ local function useState(initState)
       newVal = newVal(hookStorage[frozenIndex])
     end
     hookStorage[frozenIndex] = newVal
-    
-    return newVal
   end
   hookIndex = hookIndex + 1
   return state,setState
@@ -105,7 +103,7 @@ local function rerender()
 end
 
 local function startWorkLoop()
-  local speed = .25
+  local speed = .1
   for i=1,0,-speed do
     rerender()
     os.startTimer(1)
@@ -113,9 +111,9 @@ local function startWorkLoop()
   end
   while true do
     event = {os.pullEvent()}
-    rerender()
     Element.triggerEvent(event)
     if event[1] == "timer" then
+      rerender()
       timer = os.startTimer(1)
     end
     if event[1] == "term_resize" then

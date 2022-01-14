@@ -59,48 +59,51 @@ local Window = function(props)
         height = windowState.height
     end
     
-    return (function()
-        if windowState.maximized and windowState.open then
-            return  React.createElement("div",{
-                id = 'window_'..windowState.title .. "_" .. windowState.windowId,
+    return React.createElement("div",{
+        id = 'window_'..windowState.title .. "_" .. windowState.windowId,
+        style = {
+            zIndex = windowState.depth,
+            display = windowState.open and windowState.maximized and "block" or "none"
+        },
+        render = function(self)
+            self.super.render(self)
+        end,
+        children = {
+            React.createElement("div",{
                 style = {
-                    zIndex = windowState.depth
+                    top=1
                 },
-                render = function(self)
-                    utils.debugger.print(self.id .. " has a z of "..self.style.zIndex .. " depth of "..windowState.depth)
-                    self.super.render(self)
-                end,
-                children = {
+                id = "window_" .. windowState.windowId,
+                children = { 
                     React.createElement("div",{
-                        id = "window_" .. windowState.windowId,
-                        children ={ 
-                            Element.div({
-                                id = "shadow_"..windowState.title.."_"..windowState.windowId,
-                                className="shadow",
-                                style = {
-                                    top = 1,
-                                    left = 1,
-                                    width = width,
-                                    height = height,
-                                    backgroundColor = colors.black,    
-                                }
-                            }),
-                            props.children({windowState=windowState.windowId,width=width}),
-                            TitleBar({windowId=windowState.windowId,width=width}) 
+                        id = "shadow_"..windowState.title.."_"..windowState.windowId,
+                        className="shadow",
+                        style = {
+                            top = 0,
+                            left = 1,
+                            width = width,
+                            height = height+1,
+                            backgroundColor = colors.black,    
                         }
-                    })
+                    }),
+                    React.createElement("div",{
+                        id="window_frame_"..windowState.windowId,
+                        style = {
+                            top=0,
+                            left=0,
+                            width = width,
+                            height = height,
+                            backgroundColor = colors.white
+                        },
+                        children = {
+                            props.children({windowState=windowState,windowDispatch=windowDispatch,width=width})
+                        }
+                    }),
+                    TitleBar({windowId=windowState.windowId,width=width}),
                 }
             })
-        else
-            return React.createElement("div",{
-                style = {
-                    width=0,
-                    height=0,
-                },
-                children = {}
-            })
-        end
-    end)()
+        }
+    })
 end
 
 return Window
