@@ -5,12 +5,9 @@ local React = require "modules/React"
 local Button = require "src/components/Button"
 local WindowManagerContext = require "src/context/WindowManagerContext"
 
-
-
 local StartMenu = function(props)
     local windowManagerState,windowManagerDispatch = table.unpack(React.useContext(WindowManagerContext))
-    
-    return React.createElement("u",{
+    return props.menuState and React.createElement("u",{
         id = "startmenu",
         style = {
             width = 10,
@@ -31,15 +28,14 @@ local StartMenu = function(props)
                     height = 1,
                     backgroundColor = colors.lightBlue,
                     focusedBackgroundColor = colors.lime
-                },
+                } or {},
                 onClick = function(event)
                     windowDispatch({type="open"})
-                    windowManagerDispatch({type="setDepth", payload=windowState.windowId})
+                    windowManagerDispatch({type="setActive", payload=windowState.windowId})
                 end,
                 content = windowState.title   
             })
         end)
-    })
+    }) or Element.div({})
 end
-
 return StartMenu

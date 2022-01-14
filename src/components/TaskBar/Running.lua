@@ -5,8 +5,6 @@ local Button = require "src/components/Button"
 
 local Running = function(props)
     local windows,windowsDispatch = table.unpack(React.useContext(WindowManagerContext))
-    
-    
     local runningWindows = utils.table.filter(windows,function(window) 
         local windowState,windowDispatch = table.unpack(window)
         return windowState.open
@@ -32,11 +30,12 @@ local Running = function(props)
                     end)()
                 },
                 onClick = function(event)
-                    if windowState.maximized and windowState.depth==#runningWindows then 
-                        windowDispatch({type = "minimize"})
+                    if windowState.maximized then 
+                        windowDispatch({type="minimize"})
+                        windowsDispatch({type="setInactive",payload=windowState.windowId})
                     else
                         windowDispatch({type="maximize"})
-                        windowsDispatch({type="setDepth",payload=windowState.windowId})
+                        windowsDispatch({type="setActive",payload=windowState.windowId})
                     end
                 end
             })  

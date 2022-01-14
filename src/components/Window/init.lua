@@ -29,26 +29,29 @@ local windowReducer = function(state,action)
         ["open"] = function()
             state.open = true
         end,
-        ["setDepth"] = function()
+        ["setActive"] = function()
             state.depth = action.payload
+        end,
+        ["setWindowId"] = function()
+            state.windowId = action.payload
         end
     })
         return state
 end
 
 local Window = function(props)
-    
-    local windowManagerState,windowManagerDispatch = table.unpack(React.useContext(WindowManagerContext))
+   local windowManagerState,windowManagerDispatch = table.unpack(React.useContext(WindowManagerContext))
     local windowState,windowDispatch = React.useReducer(windowReducer,{application=props.children,title=props.title,depth=props.windowId,windowId=props.windowId,open=false,fullscreen=true,maximized=true,left=0,top=0,width=15,height=15})
     windowManagerDispatch({
         type = "insert",
         payload = {
-            windowId = props.windowId,
+            windowId = windowState.windowId,
             windowState = windowState,
             windowDispatch = windowDispatch
         }
     })
-    local WIDTH,HEIGHT = term.getSize()
+
+    local WIDTH,HEIGHT = utils.window.getSize()
     local width = WIDTH
     local height = HEIGHT - 1
     if windowState.fullscreen == false then
@@ -59,30 +62,31 @@ local Window = function(props)
     return (function()
         if windowState.maximized and windowState.open then
             return  React.createElement("div",{
-                
+                id = 'window_'..windowState.title .. "_" .. windowState.windowId,
+                style = {
+                    zIndex = windowState.depth
+                },
+                render = function(self)
+                    utils.debugger.print(self.id .. " has a z of "..self.style.zIndex .. " depth of "..windowState.depth)
+                    self.super.render(self)
+                end,
                 children = {
-                    Element.div({
-                        className="shadow",
-                        style = {
-                            top = 1,
-                            left = 1,
-                            width = width,
-                            height = height-1,
-                            backgroundColor = colors.black,    
-                        }
-                    }),
                     React.createElement("div",{
-                        id = "window_" .. props.windowId,
-                        style = {
-                            left = windowState.left,
-                            top = windowState.top+1,
-                            width = width,
-                            height = height-1,
-                            backgroundColor = colors.blue
-                        },
-                        children ={
-                            props.children({widnowId=windowState.windowId,width=width}),
-                            TitleBar({windowId=props.windowId,width=width}) 
+                        id = "window_" .. windowState.windowId,
+                        children ={ 
+                            Element.div({
+                                id = "shadow_"..windowState.title.."_"..windowState.windowId,
+                                className="shadow",
+                                style = {
+                                    top = 1,
+                                    left = 1,
+                                    width = width,
+                                    height = height,
+                                    backgroundColor = colors.black,    
+                                }
+                            }),
+                            props.children({windowState=windowState.windowId,width=width}),
+                            TitleBar({windowId=windowState.windowId,width=width}) 
                         }
                     })
                 }

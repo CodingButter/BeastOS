@@ -4,7 +4,7 @@ local TaskBar = require "src/components/TaskBar"
 local Window = require "src/components/Window"
 
 local Desktop = function(props)
-    local WIDTH,HEIGHT = term.getSize()
+    local WIDTH,HEIGHT = utils.window.getSize()
     return React.createElement("div",{
         style = {
             id = "desktop",
@@ -12,19 +12,19 @@ local Desktop = function(props)
             height = HEIGHT,
             backgroundColor = colors.green
         },
-        children = (function()
-            local children = {}
-            for i,v in pairs(props.children) do
-                
-                children[#children+1] = Window({
-                    windowId=i,
-                    children = v.application,
-                    title = v.title
-                })
-            end
-            children[#children+1] = TaskBar()
-            return children
-        end)()
+        children = {
+            React.createElement("div",{
+                id="window_container",
+                children = utils.table.map(props.children,function(v,i)
+                    return Window({
+                        windowId=v.windowId or i,
+                        children = v.application,
+                        title = v.title
+                    })
+                end)
+            }),
+            TaskBar()
+        }
     })
 end
 

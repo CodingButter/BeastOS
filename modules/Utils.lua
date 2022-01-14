@@ -54,12 +54,13 @@ Utils.table.map = function(_tbl, f)
 end
 
 Utils.table.filter = function(_tbl,f)
-   
    local t = {}
    local i = 1
    for k,v in pairs(_tbl) do
-         if f(v,i,k) then t[i] = v; end
-         i = i + 1
+         if f(v,i,k) then
+            t[i] = v; 
+            i = i + 1
+         end
    end
    return t
 end
@@ -107,7 +108,7 @@ Utils.table.save = function(data, filename)
  end
 
 Utils.debugger = peripheral.find "debugger" or term
-Utils.debugger.debugPrint = function(obj)
+Utils.debugger.printTable = function(obj)
    Utils.debugger.print(Utils.table.serialize(obj))
 end
 local WIDTH,HEIGHT = term.getSize()

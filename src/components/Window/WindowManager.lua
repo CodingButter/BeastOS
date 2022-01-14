@@ -7,6 +7,7 @@ local Desktop = require "src/components/Desktop"
 
 local switch = utils.switch
 local reducer = function(state,action)
+    local runningWindows = utils.table.filter(state,function(tbl,i)return tbl[1].open end)
     switch(action.type,{
         ["insert"] = function()
             state[action.payload.windowId] = {
@@ -17,15 +18,28 @@ local reducer = function(state,action)
         ["remove"] = function()
             state[action.payload.windowId] = nil
         end,
-        ["setDepth"] = function()
+        ["setActive"] = function()
             for k,v in pairs(state) do
                 local windowState,dispatch = table.unpack(v)
                 local _type = "setDepth"
-                local level = #state
+                local level = #runningWindows
                 if windowState.windowId ~= action.payload then 
                     level = windowState.depth - 1 
                 end
                 dispatch({type=_type,payload=level})
+                utils.debugger.print("setActive depth of id:(".. windowState.windowId ..") " .. windowState.title .." to " .. level)
+            end
+        end,
+        ["setInactive"] = function()
+            for k,v in pairs(state) do
+                local windowState,dispatch = table.unpack(v)
+                local _type = "setDepth"
+                local level = 1
+                if windowState.windowId ~= action.payload then 
+                    level = windowState.depth < #runningWindows and windowState.depth + 1 or #runningWindows
+                end
+                dispatch({type=_type,payload=level})
+                utils.debugger.print("setInactive depth of id:(".. windowState.windowId ..") " .. windowState.title .." to " .. level)
             end
         end
     })
@@ -34,15 +48,9 @@ local reducer = function(state,action)
 end
 
 local WindowManager = function(props)
-    local WIDTH,HEIGHT = term.getSize()
+    local WIDTH,HEIGHT = utils.window.getSize()
     local windows,dispatch = React.useReducer(reducer,{})
 
-    table.sort(windows,function(a,b)
-        return a[1].depth<b[1].depth
-    end)
-    local windowApps = utils.table.map(windows,function(window,i)
-        return window[1]
-    end)
     return React.createElement("div",{
         id = "window_manager",
         style = {
@@ -53,7 +61,7 @@ local WindowManager = function(props)
         children = WindowManagerContext:Provider({
             value = {windows,dispatch},
             children = {Desktop({
-                children = #windowApps>0 and windowApps or Apps
+                children =  Apps
             })}
         })
     })

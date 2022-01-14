@@ -88,7 +88,7 @@ local TitleBar = function(props)
         },
         onClick = function(event)
             if windowState.depth < #runningWindows then
-                windowsDispatch({type="setDepth",payload=windowState.windowId})
+                windowsDispatch({type="setActive",payload=windowState.windowId})
             end
         end
     })

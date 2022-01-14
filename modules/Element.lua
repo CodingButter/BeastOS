@@ -10,7 +10,6 @@ local focusSet = false
 local root = {}
 local Element = class({
   id = nil,
-  renderDepth = 1,
   children = {},
   content = false,
   constructor = function(self,tag,props,content)  
@@ -31,7 +30,6 @@ local Element = class({
   end,
   appendChild = function(self,_element)
     _element.parent = self
-    _element.renderDepth = self.renderDepth+1
     _element:getBounds()
     if _element.style.backgroundColor == "transparent" then
       _element.style.backgroundColor = self.style.backgroundColor     
@@ -101,6 +99,7 @@ local Element = class({
         term.write(self.content)
         term.setCursorPos(10,10)
       end;
+      table.sort(self.children,function(a,b) return a.style.zIndex>b.style.zIndex end)
       for k,v in ipairs(self.children) do
         v:render()
         term.setBackgroundColor(colors.black)

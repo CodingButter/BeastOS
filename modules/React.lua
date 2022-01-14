@@ -1,7 +1,7 @@
 local class = require "modules/class"
 local Element = require "modules/Element"
 local utils = require "modules/Utils"
-local WIDTH,HEIGHT = term.getSize()
+local WIDTH,HEIGHT = utils.window.getSize()
 
 local rootComponent = function()end
 local rootElement = {}
@@ -54,7 +54,6 @@ local function useContext(context)
   return contextStorage[context.index]
 end
 
-
 local function useEffect(cb,depArray)
   local oldDeps = hookStorage[hookIndex]
   local hasChanged = false
@@ -95,7 +94,7 @@ local function render(c)
 end
 
 local function rerender()
-  local WIDTH,HEIGHT = term.getSize()
+  local WIDTH,HEIGHT = utils.window.getSize()
   
   local el = render(rootComponent)
     rootElement.children = {}
@@ -106,7 +105,7 @@ local function rerender()
 end
 
 local function startWorkLoop()
-  local speed = 1
+  local speed = .25
   for i=1,0,-speed do
     rerender()
     os.startTimer(1)
