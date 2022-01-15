@@ -7,13 +7,13 @@ local Running = require "src/components/TaskBar/Running"
 local StartMenu = require "src/components/TaskBar/StartMenu"
 
 local TaskBar = function(props)
-    local windows,dispatch = table.unpack(React.useContext(WindowManagerContext))
+    local windows, dispatch = table.unpack(React.useContext(WindowManagerContext))
     local WIDTH, HEIGHT = utils.window.getSize()
-    local menuState,updateMenu = React.useState(false)
+    local menuState, updateMenu = React.useState(false)
     local function toggleMenu()
         updateMenu(not menuState and true or false)
     end
-    return React.createElement("div",{
+    return React.createElement("div", {
         id = "taskbar",
         style = {
             height = 1,
@@ -22,12 +22,13 @@ local TaskBar = function(props)
             backgroundColor = colors.red,
             textColor = colors.black
         },
-        children = {
-            StartMenu({menuState = menuState,toggleMenu = toggleMenu,loseFocus=toggleMenu}),
-            StartButton({toggleMenu = toggleMenu}),
-            Running(),
-            BeastOs()
-        }
+        children = {StartMenu({
+            menuState = menuState,
+            toggleMenu = toggleMenu,
+            loseFocus = toggleMenu
+        }), StartButton({
+            toggleMenu = toggleMenu
+        }), Running(), BeastOs()}
     })
 end
 return TaskBar

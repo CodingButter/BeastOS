@@ -1,4 +1,3 @@
-
 local utils = require "modules/Utils"
 local React = require "modules/React"
 local Element = require "modules/Element"
@@ -13,13 +12,15 @@ local CloseButton = function(props)
             left = props.right - 3,
             top = 0,
             width = 3,
-            height =1,
+            height = 1,
             backgroundColor = colors.red,
             textColor = colors.white
         },
-        onClick = function(self,event)
+        onClick = function(self, event)
             if props.state.depth == #props.windows then
-                props.dispatch({type="close"})
+                props.dispatch({
+                    type = "close"
+                })
             end
         end,
         content = symbols.close
@@ -30,16 +31,18 @@ local MaximizeButton = function(props)
     return Button({
         id = "full_screen",
         style = {
-            left=props.right - 6,
-            top=0,
+            left = props.right - 6,
+            top = 0,
             width = 3,
-            height =1,
+            height = 1,
             backgroundColor = colors.lightBlue,
             textColor = colors.white
-        }, 
-        onClick = function(self,event)
+        },
+        onClick = function(self, event)
             if props.state.depth == #props.windows then
-                props.dispatch({type="toggle_fullscreen"})
+                props.dispatch({
+                    type = "toggle_fullscreen"
+                })
             end
         end,
         content = props.state.fullscreen and symbols.windowed or symbols.fullscreen
@@ -52,43 +55,59 @@ local MinimizeButton = function(props)
             left = props.right - 9,
             top = 0,
             width = 3,
-            height =1,
+            height = 1,
             backgroundColor = colors.orange,
             textColor = colors.white
         },
-        onClick = function(self,event)
+        onClick = function(self, event)
             if props.state.depth == #props.windows then
-                props.dispatch({type="minimize"})
+                props.dispatch({
+                    type = "minimize"
+                })
             end
         end,
         content = symbols.minimize
     })
 end
 
-
 local TitleBar = function(props)
-    local windows,windowsDispatch = table.unpack(React.useContext(WindowManagerContext))
-    local windowState,windowDispatch = table.unpack(windows[props.windowId] or {{},function()end})
-    local runningWindows = utils.table.filter(windows,function(window) 
-        local windowState,windowDispatch = table.unpack(window)
+    local windows, windowsDispatch = table.unpack(React.useContext(WindowManagerContext))
+    local windowState, windowDispatch = table.unpack(windows[props.windowId] or {{}, function()
+    end})
+    local runningWindows = utils.table.filter(windows, function(window)
+        local windowState, windowDispatch = table.unpack(window)
         return windowState.open
-    end)    
-    return React.createElement("div",{
+    end)
+    return React.createElement("div", {
         id = "title_bar",
         style = {
             width = props.width,
             height = 1,
-            top =-1,
+            top = -1,
             backgroundColor = colors.lightGray
         },
-        children = {
-            CloseButton({right=props.width,windows=runningWindows,state=windowState,dispatch=windowDispatch}),
-            MinimizeButton({right=props.width,windows=runningWindows,state=windowState,dispatch=windowDispatch}),
-            MaximizeButton({right=props.width,windows=runningWindows,state=windowState,dispatch=windowDispatch})
-        },
+        children = {CloseButton({
+            right = props.width,
+            windows = runningWindows,
+            state = windowState,
+            dispatch = windowDispatch
+        }), MinimizeButton({
+            right = props.width,
+            windows = runningWindows,
+            state = windowState,
+            dispatch = windowDispatch
+        }), MaximizeButton({
+            right = props.width,
+            windows = runningWindows,
+            state = windowState,
+            dispatch = windowDispatch
+        })},
         onClick = function(event)
             if windowState.depth < #runningWindows then
-                windowsDispatch({type="setActive",payload=windowState.windowId})
+                windowsDispatch({
+                    type = "setActive",
+                    payload = windowState.windowId
+                })
             end
         end
     })

@@ -1,4 +1,3 @@
-
 local utils = require "modules/Utils"
 local Element = require "modules/Element"
 local React = require "modules/React"
@@ -6,8 +5,8 @@ local Button = require "src/components/Button"
 local WindowManagerContext = require "src/context/WindowManagerContext"
 
 local StartMenu = function(props)
-    local windowManagerState,windowManagerDispatch = table.unpack(React.useContext(WindowManagerContext))
-    return props.menuState and React.createElement("u",{
+    local windowManagerState, windowManagerDispatch = table.unpack(React.useContext(WindowManagerContext))
+    return props.menuState and React.createElement("u", {
         id = "startmenu",
         style = {
             width = 10,
@@ -17,12 +16,12 @@ local StartMenu = function(props)
             backgroundColor = colors.lightGray
         },
         loseFocus = props.loseFocus,
-        children = utils.table.map(windowManagerState,function(window,i)
-                local windowState,windowDispatch = table.unpack(window)
-                return Button({
-                id="window-"..i,
+        children = utils.table.map(windowManagerState, function(window, i)
+            local windowState, windowDispatch = table.unpack(window)
+            return Button({
+                id = "window-" .. i,
                 style = {
-                    top = i-1,
+                    top = i - 1,
                     left = 0,
                     width = 12,
                     height = 1,
@@ -30,10 +29,15 @@ local StartMenu = function(props)
                     focusedBackgroundColor = colors.lime
                 } or {},
                 onClick = function(event)
-                    windowDispatch({type="open"})
-                    windowManagerDispatch({type="setActive", payload=windowState.windowId})
+                    windowDispatch({
+                        type = "open"
+                    })
+                    windowManagerDispatch({
+                        type = "setActive",
+                        payload = windowState.windowId
+                    })
                 end,
-                content = windowState.title   
+                content = windowState.title
             })
         end)
     }) or Element.div({})

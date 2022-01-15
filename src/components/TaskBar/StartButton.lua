@@ -1,9 +1,8 @@
-
 local React = require "modules/React"
 local Element = require "modules/Element"
 
 local StartButton = function(props)
-    return  Element.button({
+    return Element.button({
         id = "startBtn",
         style = {
             width = 9,
@@ -13,10 +12,10 @@ local StartButton = function(props)
             focusedBackgroundColor = colors.lime,
             color = colors.yellow
         },
-        onClick = function(self,event)
+        onClick = function(self, event)
             props.toggleMenu()
         end
-    },"[START]")
+    }, "[START]")
 end
 
 return StartButton

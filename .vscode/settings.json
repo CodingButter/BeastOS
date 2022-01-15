@@ -1,0 +1,12 @@
+{
+      "editor.defaultFormatter": "yinfei.luahelper",
+      "editor.formatOnSave": true,
+      "Lua.diagnostics.globals": [
+            "colors",
+            "sleep",
+            "term"
+      ],
+      "Lua.diagnostics.disable": [
+            "undefined-field"
+      ]
+}

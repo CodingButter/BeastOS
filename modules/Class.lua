@@ -1,18 +1,21 @@
 local utils = require "modules/Utils"
 
-local class =  function(newClass,parentClass)
-    newClass.__index = newClass
+local class = function(newClass, parentClass)
     local hasConstructor = newClass.constructor ~= nil
-    if parentClass ~=nil then 
-        setmetatable(newClass,parentClass)
+    if parentClass ~= nil then
+        setmetatable(newClass, {
+            __index = parentClass
+        })
         newClass.super = parentClass
     end
-    newClass.new = function(...)
+    function newClass:new(args)
         local instance = {}
-        setmetatable(instance,utils.table.copy(newClass))
+        setmetatable(instance, {
+            __index = self
+        })
         if hasConstructor == true then
-            instance:constructor(...)
-        end;
+            instance:constructor(args)
+        end
         return instance
     end
     return newClass

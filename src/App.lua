@@ -1,4 +1,3 @@
-
 local utils = require "modules/Utils"
 local React = require "modules/React"
 local WindowManager = require "src/components/Window/WindowManager"
@@ -6,8 +5,8 @@ local TaskBar = require "src/components/TaskBar"
 
 App = function()
     local WIDTH, HEIGHT = utils.window.getSize()
-    return React.createElement("div",{
-        id="main_element",
+    return React.createElement("div", {
+        id = "main_element",
         style = {
             left = 1,
             top = 1,
@@ -15,9 +14,7 @@ App = function()
             height = HEIGHT,
             backgroundColor = "transparent"
         },
-        children = {
-            WindowManager()
-        }
+        children = {WindowManager()}
     })
 end
 
