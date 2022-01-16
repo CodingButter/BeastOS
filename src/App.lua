@@ -3,7 +3,7 @@ local React = require "modules/React"
 local WindowManager = require "src/components/Window/WindowManager"
 local TaskBar = require "src/components/TaskBar"
 
-App = function()
+local App = function()
     local WIDTH, HEIGHT = utils.window.getSize()
     return React.createElement("div", {
         id = "main_element",

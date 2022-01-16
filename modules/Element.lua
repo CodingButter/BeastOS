@@ -16,7 +16,7 @@ local Element = class((function()
             self[k] = v
         end
         self.id = props.id or self.id
-        self.style = Style.new(props.style or {})
+        self.style = Style:new(props.style or {})
         self.tag = tag
         self.content = content or self.content
         self:getBounds()
@@ -81,6 +81,12 @@ local Element = class((function()
     end
 
     function ElementBase:render()
+        if self.id == "taskbar" then
+            utils.debugger.print(#self.children .. " in taskbar")
+            utils.debugger.stop()
+            utils.debugger.printTable(self.children)
+            utils.debugger.print(self.id)
+        end
         local style = self.style
         local color = style.color
         local backgroundColor = style.backgroundColor
@@ -142,16 +148,14 @@ local Element = class((function()
 end)())
 
 local root = false
-local div = class((function()
-    local divBase = {}
-    function divBase:constructor(props, content)
+local div = class({
+    constructor = function(self, props, content)
         self.super:constructor("div", props, content)
     end
-    return divBase
-end)(), Element)
+}, Element)
 
 local button = class({
-    style = Style.new({
+    style = Style:new({
         backgroundColor = colors.gray,
         focusedBackgroundColor = colors.lightGray
     }),
@@ -171,8 +175,8 @@ local button = class({
     end
 }, Element)
 
-local u = class({
-    style = Style.new({
+local ul = class({
+    style = Style:new({
         backgroundColor = colors.gray,
         focusedBackgroundColor = colors.lightGray
     }),
@@ -217,10 +221,18 @@ Element.triggerEvent = function(event)
     root:event(event)
 end
 
-Element.div = div.new
-Element.button = button.new
-Element.input = input.new
-Element.u = u.new
+Element.div = function(props, content)
+    return div:new(props, content)
+end
+Element.button = function(props, content)
+    return button:new(props, content)
+end
+Element.input = function(props, content)
+    return input:new(props, content)
+end
+Element.ul = function(props, content)
+    return ul:new(props, content)
+end
 Element.Elements = Elements
 
 return Element

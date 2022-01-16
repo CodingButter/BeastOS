@@ -6,7 +6,7 @@ local WindowManagerContext = require "src/context/WindowManagerContext"
 
 local StartMenu = function(props)
     local windowManagerState, windowManagerDispatch = table.unpack(React.useContext(WindowManagerContext))
-    return props.menuState and React.createElement("u", {
+    return props.menuState and React.createElement("ul", {
         id = "startmenu",
         style = {
             width = 10,

@@ -4,7 +4,9 @@
       "Lua.diagnostics.globals": [
             "colors",
             "sleep",
-            "term"
+            "term",
+            "peripheral",
+            "window"
       ],
       "Lua.diagnostics.disable": [
             "undefined-field"

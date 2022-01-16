@@ -1,24 +1,29 @@
 local utils = require "modules/Utils"
 
-local class = function(newClass, parentClass)
-    local hasConstructor = newClass.constructor ~= nil
-    if parentClass ~= nil then
-        setmetatable(newClass, {
+local class = function(classDef, parentClass)
+    if classDef.super then
+        error("super is a protected attribute", 2)
+    end
+    if classDef.new then
+        error("new is a protected method", 2)
+    end
+    if parentClass then
+        setmetatable(classDef, {
             __index = parentClass
         })
-        newClass.super = parentClass
+        classDef.super = parentClass
     end
-    function newClass:new(args)
-        local instance = {}
-        setmetatable(instance, {
+    function classDef:new(...)
+        local new = {}
+        setmetatable(new, {
             __index = self
         })
-        if hasConstructor == true then
-            instance:constructor(args)
+        if new.constructor then
+            new:constructor(...)
         end
-        return instance
+        return new
     end
-    return newClass
+    return classDef
 end
 
 return class

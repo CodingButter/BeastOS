@@ -79,9 +79,6 @@ local Window = function(props)
             zIndex = windowState.depth,
             display = windowState.open and windowState.maximized and "block" or "none"
         },
-        render = function(self)
-            self.super.render(self)
-        end,
         children = {React.createElement("div", {
             style = {
                 top = 1

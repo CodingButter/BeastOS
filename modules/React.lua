@@ -69,6 +69,7 @@ local function useEffect(cb, depArray)
 end
 
 local function renderElement(c)
+
     local child = nil
     local el = Element[c.tag](c.props, "")
     el.children = {}
@@ -108,6 +109,7 @@ local function rerender()
 end
 
 local function startWorkLoop()
+
     local speed = .5
     for i = 1, 0, -speed do
         rerender()
@@ -125,32 +127,29 @@ local function startWorkLoop()
             local WIDTH, HEIGHT = term.getSize()
             utils.window.reposition(0, 0, WIDTH, HEIGHT)
         end
+
     end
 end
 
-local function renderDom(component, re, norender)
+local function renderDom(component, re)
     rootElement = re
     rootComponent = component
     local element = render(rootComponent)
     rootElement:appendChild(element)
-    rootElement:render()
-    if norender then
-        return
-    end
     Element.attachRoot(rootElement)
+    rootElement:render()
     startWorkLoop()
 end
 
-local createElement = class({
-    constructor = function(self, tag, props, key, ref)
-        self.tag = tag
-        self.props = props
-        self.props.children = props.children or {}
-        self.key = key
-        self.ref = ref
-    end
-}).new
-
+local createElement = function(tag, props, key, ref)
+    props.children = props.children or {}
+    return {
+        tag = tag,
+        props = props,
+        key = key,
+        ref = ref
+    }
+end
 return {
     useState = useState,
     useRef = useRef,
