@@ -1,9 +1,10 @@
 local pretty = require "cc.pretty"
-local utils = require "modules/Utils"
-local React = require "modules/React"
-local WindowManagerContext = require "src/context/WindowManagerContext"
-local Apps = require "src/applications"
-local Desktop = require "src/components/Desktop"
+local utils = require "modules.Utils"
+local Element = require "modules.Element"
+local React = require "modules.React"
+local WindowManagerContext = require "src.context.WindowManagerContext"
+local Apps = require "src.applications"
+local Desktop = require "src.components.Desktop"
 
 local switch = utils.switch
 local reducer = function(state, action)
@@ -53,10 +54,10 @@ local reducer = function(state, action)
 end
 
 local WindowManager = function(props)
-    local WIDTH, HEIGHT = utils.window.getSize()
+    local WIDTH, HEIGHT = term.getSize()
     local windows, dispatch = React.useReducer(reducer, {})
 
-    return React.createElement("div", {
+    return Element.createElement("div", {
         id = "window_manager",
         style = {
             width = WIDTH,

@@ -1,12 +1,13 @@
-local React = require "modules/React"
-local utils = require "modules/Utils"
-local WindowManagerContext = require "src/context/WindowManagerContext"
-local Button = require "src/components/Button"
+local Element = require "modules.Element"
+local React = require "modules.React"
+local utils = require "modules.Utils"
+local WindowManagerContext = require "src.context.WindowManagerContext"
+local Button = require "src.components.Button"
 
 local Running = function(props)
     local windows, windowsDispatch = table.unpack(React.useContext(WindowManagerContext))
     local iconWidth = 8
-    return React.createElement("div", {
+    return Element.createElement("div", {
         style = {
             left = 8,
             height = 1
@@ -14,7 +15,7 @@ local Running = function(props)
         children = utils.table.map(windows, function(window, i, k)
             local windowState, windowDispatch = table.unpack(window)
             return Button({
-                content = windowState.title:sub(1, iconWidth - 2),
+                text = windowState.title:sub(1, iconWidth - 2),
                 style = {
                     top = 0,
                     width = iconWidth,

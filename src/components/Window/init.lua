@@ -1,9 +1,9 @@
-local utils = require "modules/Utils"
+local utils = require "modules.Utils"
 local pretty = require "cc.pretty"
-local Element = require "modules/Element"
-local React = require "modules/React"
-local WindowManagerContext = require "src/context/WindowManagerContext"
-local TitleBar = require "src/components/Window/TitleBar"
+local Element = require "modules.Element"
+local React = require "modules.React"
+local WindowManagerContext = require "src.context.WindowManagerContext"
+local TitleBar = require "src.components.Window.TitleBar"
 
 local switch = utils.switch
 
@@ -65,7 +65,7 @@ local Window = function(props)
         }
     })
 
-    local WIDTH, HEIGHT = utils.window.getSize()
+    local WIDTH, HEIGHT = term.getSize()
     local width = WIDTH
     local height = HEIGHT - 1
     if windowState.fullscreen == false then
@@ -73,18 +73,18 @@ local Window = function(props)
         height = windowState.height
     end
 
-    return React.createElement("div", {
+    return Element.createElement("div", {
         id = 'window_' .. windowState.title .. "_" .. windowState.windowId,
         style = {
             zIndex = windowState.depth,
             display = windowState.open and windowState.maximized and "block" or "none"
         },
-        children = {React.createElement("div", {
+        children = {Element.createElement("div", {
             style = {
                 top = 1
             },
             id = "window_" .. windowState.windowId,
-            children = {React.createElement("div", {
+            children = {Element.createElement("div", {
                 id = "shadow_" .. windowState.title .. "_" .. windowState.windowId,
                 className = "shadow",
                 style = {
@@ -94,7 +94,7 @@ local Window = function(props)
                     height = height + 1,
                     backgroundColor = colors.black
                 }
-            }), React.createElement("div", {
+            }), Element.createElement("div", {
                 id = "window_frame_" .. windowState.windowId,
                 style = {
                     top = 0,

@@ -1,19 +1,19 @@
-local utils = require "modules/Utils"
-local Element = require "modules/Element"
-local React = require "modules/React"
+local utils = require "modules.Utils"
+local Element = require "modules.Element"
 local BeastOs = function(props)
-    local WIDTH, HEIGHT = utils.window.getSize()
-    return Element.button({
+    local WIDTH, HEIGHT = term.getSize()
+    return Element.div({
         id = "beastos",
         style = {
             paddingRight = 1,
             left = WIDTH - 8,
             height = 1,
             width = 8,
-            color = colors.lightBlue
+            color = colors.blue
         },
-        content = "BeastUI"
-    })
+
+        children = {}
+    }, "BeastUI")
 end
 
 return BeastOs

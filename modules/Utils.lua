@@ -8,7 +8,7 @@ end
 Utils.colors = {}
 Utils.colors.getCharOf = function(colour)
     if type(colour) == "number" then
-        local value = math.floor(math.log(colour) / math.log(2)) + 1
+        local value = math.floor(math.log(colour).math.log(2)) + 1
         if value >= 1 and value <= 16 then
             local ret
             string.sub("0123456789abcdef", value, value)

@@ -1,5 +1,3 @@
-local utils = require "modules/Utils"
-
 local class = function(classDef, parentClass)
     if classDef.super then
         error("super is a protected attribute", 2)
@@ -25,5 +23,4 @@ local class = function(classDef, parentClass)
     end
     return classDef
 end
-
 return class

@@ -1,9 +1,9 @@
-local utils = require "modules/Utils"
-local React = require "modules/React"
-local Element = require "modules/Element"
-local symbols = require "src/configs/symbols"
-local Button = require "src/components/Button"
-local WindowManagerContext = require "src/context/WindowManagerContext"
+local utils = require "modules.Utils"
+local React = require "modules.React"
+local Element = require "modules.Element"
+local symbols = require "src.configs.symbols"
+local Button = require "src.components.Button"
+local WindowManagerContext = require "src.context.WindowManagerContext"
 
 local CloseButton = function(props)
     return Button({
@@ -23,7 +23,7 @@ local CloseButton = function(props)
                 })
             end
         end,
-        content = symbols.close
+        text = symbols.close
     })
 end
 
@@ -45,7 +45,7 @@ local MaximizeButton = function(props)
                 })
             end
         end,
-        content = props.state.fullscreen and symbols.windowed or symbols.fullscreen
+        text = props.state.fullscreen and symbols.windowed or symbols.fullscreen
     })
 end
 local MinimizeButton = function(props)
@@ -66,7 +66,7 @@ local MinimizeButton = function(props)
                 })
             end
         end,
-        content = symbols.minimize
+        text = symbols.minimize
     })
 end
 
@@ -78,7 +78,7 @@ local TitleBar = function(props)
         local windowState, windowDispatch = table.unpack(window)
         return windowState.open
     end)
-    return React.createElement("div", {
+    return Element.createElement("div", {
         id = "title_bar",
         style = {
             width = props.width,

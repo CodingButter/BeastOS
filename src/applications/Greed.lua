@@ -1,11 +1,11 @@
-local utils = require "modules/Utils"
-local Element = require "modules/Element"
-local React = require "modules/React"
+local utils = require "modules.Utils"
+local Element = require "modules.Element"
+local React = require "modules.React"
 
 local Greed = function(props)
     local windowState = props.windowState
     local windowDispatch = props.windowDispatch
-    local WIDTH, HEIGHT = utils.window.getSize()
+    local WIDTH, HEIGHT = term.getSize()
     local centerX = WIDTH / 2
     local centerY = HEIGHT / 3
     local radius = 4
@@ -27,7 +27,7 @@ local Greed = function(props)
             return newAngle
         end)
     end
-    return React.createElement("div", {
+    return Element.createElement("div", {
         style = {
             top = centerY - elHeight / 2 + sinY,
             left = props.width / 2 - elWidth / 2 + cosX,

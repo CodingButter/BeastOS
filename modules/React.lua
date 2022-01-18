@@ -1,10 +1,9 @@
-local class = require "modules/class"
-local Element = require "modules/Element"
-local utils = require "modules/Utils"
-local WIDTH, HEIGHT = utils.window.getSize()
+local class = require "modules.class"
+local Element = require "modules.Element"
+local utils = require "modules.Utils"
+local WIDTH, HEIGHT = term.getSize()
 
-local rootComponent = function()
-end
+local rootComponent = nil
 local rootElement = {}
 local hookStorage = {}
 local contextStorage = {}
@@ -68,39 +67,28 @@ local function useEffect(cb, depArray)
     hookStorage[hookIndex] = depArray
 end
 
-local function renderElement(c)
+local function renderComponent(el)
 
-    local child = nil
-    local el = Element[c.tag](c.props, "")
-    el.children = {}
-    if type(c.props.children) ~= "table" then
-        el.content = c.props.children
+    local children = el.children
+    if children.type == "Element" then
+        el:appendChild(children)
+    elseif type(children) == "function" then
+        el:appendChild(children())
     else
-        if c.props.children.style then
-            el:appendChild(c.props.children)
-        else
-            for _, v in ipairs(c.props.children) do
-                if v.props then
-                    child = renderElement(v)
-                else
-                    child = v
-                end
-                el:appendChild(child)
+
+        for _, child in pairs(children) do
+            if type(child) == "function" then
+                child = renderComponent(child())
             end
+            el:appendChild(child)
         end
     end
     return el
 end
 
-local function render(c)
+local function render()
     hookIndex = 1
-    return renderElement(c())
-end
-
-local function rerender()
-    local WIDTH, HEIGHT = utils.window.getSize()
-
-    local el = render(rootComponent)
+    local el = rootComponent()
     rootElement.children = {}
     rootElement:appendChild(el)
     utils.window.setVisible(false)
@@ -112,7 +100,7 @@ local function startWorkLoop()
 
     local speed = .5
     for i = 1, 0, -speed do
-        rerender()
+        render()
         os.startTimer(1)
         sleep(speed)
     end
@@ -120,7 +108,7 @@ local function startWorkLoop()
         local event = {os.pullEvent()}
         Element.triggerEvent(event)
         if event[1] == "timer" then
-            rerender()
+            render()
             os.startTimer(1)
         end
         if event[1] == "term_resize" then
@@ -134,16 +122,14 @@ end
 local function renderDom(component, re)
     rootElement = re
     rootComponent = component
-    local element = render(rootComponent)
-    rootElement:appendChild(element)
     Element.attachRoot(rootElement)
-    rootElement:render()
     startWorkLoop()
 end
 
 local createElement = function(tag, props, key, ref)
     props.children = props.children or {}
     return {
+        type = "ReactElement",
         tag = tag,
         props = props,
         key = key,

@@ -1,9 +1,9 @@
-local Element = require "modules/Element"
-local React = require "modules/React"
+local Element = require "modules.Element"
+local React = require "modules.React"
 
 local BulletinBoard = function(props)
     local elWidth = 16
-    return React.createElement("div", {
+    return Element.createElement("div", {
         style = {
             left = props.width / 2 - elWidth / 2,
             width = elWidth,

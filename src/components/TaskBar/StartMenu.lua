@@ -1,14 +1,15 @@
-local utils = require "modules/Utils"
-local Element = require "modules/Element"
-local React = require "modules/React"
-local Button = require "src/components/Button"
-local WindowManagerContext = require "src/context/WindowManagerContext"
+local utils = require "modules.Utils"
+local Element = require "modules.Element"
+local React = require "modules.React"
+local Button = require "src.components.Button"
+local WindowManagerContext = require "src.context.WindowManagerContext"
 
 local StartMenu = function(props)
     local windowManagerState, windowManagerDispatch = table.unpack(React.useContext(WindowManagerContext))
-    return props.menuState and React.createElement("ul", {
+    return Element.createElement("ul", {
         id = "startmenu",
         style = {
+            display = props.menuState and "block" or "none",
             width = 10,
             height = #windowManagerState,
             left = 2,
@@ -37,9 +38,9 @@ local StartMenu = function(props)
                         payload = windowState.windowId
                     })
                 end,
-                content = windowState.title
+                text = windowState.title
             })
         end)
-    }) or Element.div({})
+    })
 end
 return StartMenu

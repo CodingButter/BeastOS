@@ -1,6 +1,6 @@
-local React = require "modules/React"
-local WindowManagerContext = require "src/context/WindowManagerContext"
-local utils = require "modules/Utils"
+local React = require "modules.React"
+local WindowManagerContext = require "src.context.WindowManagerContext"
+local utils = require "modules.Utils"
 local useWindowContext = function(windowId)
 
     local windows = React.useContext(WindowManagerContext)[1]

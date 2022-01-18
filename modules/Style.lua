@@ -1,4 +1,4 @@
-local class = require "modules/Class"
+local class = require "modules.Class"
 
 local Style = class({
     zIndex = 1,

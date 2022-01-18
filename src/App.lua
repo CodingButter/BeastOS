@@ -1,11 +1,10 @@
-local utils = require "modules/Utils"
-local React = require "modules/React"
-local WindowManager = require "src/components/Window/WindowManager"
-local TaskBar = require "src/components/TaskBar"
+local utils = require "modules.Utils"
+local Element = require "modules.Element"
+local WindowManager = require "src.components.Window.WindowManager"
 
 local App = function()
-    local WIDTH, HEIGHT = utils.window.getSize()
-    return React.createElement("div", {
+    local WIDTH, HEIGHT = term.getSize()
+    return Element.createElement("div", {
         id = "main_element",
         style = {
             left = 1,
